@@ -1,0 +1,38 @@
+# IDE & Tooling
+.idea/
+*.iml
+*.ipr
+*.iws
+.vscode/
+.DS_Store
+
+# Flutter/Dart
+.dart_tool/
+.packages
+.pub-cache/
+.pub/
+build/
+# If you use the open-commit CLI or similar AI tools, 
+# ignore their local config if they create any.
+
+# Android
+.gradle/
+local.properties
+**/android/local.properties
+**/android/key.properties
+**/android/app/src/main/res/raw/
+*.jks
+*.keystore
+/captures
+.externalNativeBuild
+.cxx
+
+# iOS
+**/ios/Flutter/Generated.xcconfig
+**/ios/Flutter/flutter_export_environment.sh
+**/ios/Podfile.lock
+**/ios/.lsresolved
+Pods/
+
+# Environment / Secret files
+.env*
