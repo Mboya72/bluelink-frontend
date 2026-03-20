@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'core/app_theme.dart';
+import 'features/Onboarding/screens/onboarding_screen.dart';
 
 void main() {
   runApp(const BluelinkApp());
@@ -10,13 +11,13 @@ class BluelinkApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // This 'role' would typically come from your Auth provider or Database
-    const UserRole currentRole = UserRole.fisherman;
-
+    // For now, we default to Fisherman theme until a role is selected
+    // Once you have a selection saved, you'd load it here.
     return MaterialApp(
       title: 'Bluelink',
       debugShowCheckedModeBanner: false,
-      theme: AppTheme.getTheme(currentRole),
+      theme: AppTheme.getTheme(UserRole.fisherman),
+      home: const OnboardingScreen(), // This is the key line
     );
   }
 }

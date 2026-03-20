@@ -1,7 +1,7 @@
 import 'dart:developer' as developer;
 import 'package:flutter/material.dart';
-import '../../../core/app_theme.dart';
-import '../../../common_widgets/custom_button.dart';
+import '../../../../core/app_theme.dart';
+import '../../../../common_widgets/custom_button.dart';
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
