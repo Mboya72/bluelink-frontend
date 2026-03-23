@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'core/app_theme.dart';
-import 'features/Onboarding/screens/onboarding_screen.dart';
+import 'features/onboarding/screens/onboarding_screen.dart';
 
 void main() {
+  // Ensure Flutter is initialized before running the app
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(const BluelinkApp());
 }
 
@@ -11,13 +13,21 @@ class BluelinkApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // For now, we default to Fisherman theme until a role is selected
-    // Once you have a selection saved, you'd load it here.
     return MaterialApp(
       title: 'Bluelink',
       debugShowCheckedModeBanner: false,
-      theme: AppTheme.getTheme(UserRole.fisherman),
-      home: const OnboardingScreen(), // This is the key line
+
+      // Updated: Removed the UserRole argument since we
+      // simplified the theme to a unified Sky Blue.
+      theme: AppTheme.getTheme(),
+
+      // Entry point of the UI flow
+      home: const OnboardingScreen(),
+
+      // Optional: Add routes here as you build the Login/Register screens
+      // routes: {
+      //   '/login': (context) => const LoginScreen(),
+      // },
     );
   }
 }

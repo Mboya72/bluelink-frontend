@@ -1,31 +1,27 @@
 import 'package:flutter/material.dart';
 import 'core/app_theme.dart';
-import 'features/onboarding/screens/onboarding_screen.dart';
+import 'features/onboarding/screens/onboarding_screen.dart' hide UserRole;
 
 class BluelinkApp extends StatelessWidget {
   const BluelinkApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // For now, we use a default role.
-    // Later, this will be driven by a State Provider (Riverpod/Bloc)
-    const initialRole = UserRole.fisherman;
+    // Accessing the enum from AppTheme to ensure type consistency
+    // ignore: unused_local_variable
+    final initialRole = UserRole.fisherman;
 
     return MaterialApp(
       title: 'Bluelink',
       debugShowCheckedModeBanner: false,
 
-      // Theme configuration
-      theme: AppTheme.getTheme(initialRole),
+      // Theme configuration using Urbanist font
+      theme: AppTheme.getTheme(),
 
-      // Entry point of the UI flow
+      // Starting with the new animated onboarding flow
       home: const OnboardingScreen(),
 
-      // Optional: Define named routes here as the app grows
-      // routes: {
-      //   '/login': (context) => const LoginScreen(),
-      //   '/dashboard': (context) => const DashboardScreen(),
-      // },
+      // Builder can be used here later to inject global overlays or providers
     );
   }
 }

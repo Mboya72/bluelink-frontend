@@ -1,59 +1,62 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart'; // Import this
 
 enum UserRole { fisherman, buyer, seller, driver, storage, admin }
 
 class AppTheme {
-  // 1. Define our Base Sky Blue Brand Colors
-  static const Color skyBluePrimary = Color(0xFF00B4D8); // Vibrant Sky Blue
-  static const Color skyBlueLight = Color(0xFFCAF0F8);   // Very Pale Blue
-  static const Color skyBlueDark = Color(0xFF0077B6);    // Deep Ocean Blue
+  static const Color vibrantBlue = Color(0xFF1E88E5);
+  static const Color paleAzure = Color(0xFFE3F2FD);
+  static const Color navyDark = Color(0xFF0D47A1);
 
-  static Color getRoleColor(UserRole role) {
-    switch (role) {
-      case UserRole.fisherman: return const Color(0xFF0077B6); // Ocean Blue
-      case UserRole.buyer:     return const Color(0xFF00B4D8); // Sky Blue
-      case UserRole.seller:    return const Color(0xFF48CAE4); // Cyan Blue
-      case UserRole.driver:    return const Color(0xFF90E0EF); // Light Sky
-      case UserRole.storage:   return const Color(0xFFADE8F4); // Ice Blue
-      case UserRole.admin:     return const Color(0xFF03045E); // Navy (Admin)
-    }
-  }
+  static Color getRoleColor(UserRole role) => vibrantBlue;
 
-  static ThemeData getTheme(UserRole role) {
-    // During onboarding, we'll likely use skyBluePrimary.
-    // Once logged in, we use the specific role color.
-    final primaryColor = getRoleColor(role);
+  static ThemeData getTheme() {
+    // We create the base text theme using Urbanist
+    final textTheme = GoogleFonts.urbanistTextTheme().copyWith(
+      headlineMedium: GoogleFonts.urbanist(
+        color: navyDark,
+        fontWeight: FontWeight.bold,
+        fontSize: 28,
+        letterSpacing: -0.5,
+      ),
+      bodyLarge: GoogleFonts.urbanist(
+        color: Colors.grey[700],
+        fontSize: 16,
+        height: 1.6,
+      ),
+      labelLarge: GoogleFonts.urbanist(
+        fontWeight: FontWeight.w700,
+        letterSpacing: 1.2,
+      ),
+    );
 
     return ThemeData(
       useMaterial3: true,
-      // Setting scaffold to primaryColor matches the full-screen color in your image
-      scaffoldBackgroundColor: primaryColor,
-      primaryColor: primaryColor,
+      scaffoldBackgroundColor: paleAzure,
+      primaryColor: vibrantBlue,
+
+      // This applies Urbanist to every widget in the app
+      textTheme: textTheme,
+
+      // Specifically for buttons and input fields
+      fontFamily: GoogleFonts.urbanist().fontFamily,
 
       colorScheme: ColorScheme.fromSeed(
-        seedColor: primaryColor,
-        primary: primaryColor,
-        secondary: skyBlueDark,
+        seedColor: vibrantBlue,
+        primary: vibrantBlue,
+        secondary: navyDark,
         surface: Colors.white,
       ),
 
-      // Styling for the white bottom persistent bar and buttons
-      textTheme: const TextTheme(
-        headlineMedium: TextStyle(
-          color: Colors.white,
-          fontWeight: FontWeight.bold,
-          fontSize: 28,
-          letterSpacing: -0.5,
-        ),
-        bodyLarge: TextStyle(
-          color: Colors.white70,
-          fontSize: 16,
-          height: 1.5,
+      // Update button themes to match the new font weight
+      elevatedButtonTheme: ElevatedButtonThemeData(
+        style: ElevatedButton.styleFrom(
+          textStyle: GoogleFonts.urbanist(
+            fontWeight: FontWeight.bold,
+            fontSize: 16,
+          ),
         ),
       ),
-
-      // Ensure buttons inside the white bar use the role color for icons
-      iconTheme: IconThemeData(color: primaryColor),
     );
   }
 }
