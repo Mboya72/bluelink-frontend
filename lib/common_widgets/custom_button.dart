@@ -1,53 +1,44 @@
+// lib/common_widgets/custom_button.dart
+
 import 'package:flutter/material.dart';
 
 class CustomButton extends StatelessWidget {
-  final String text;
   final VoidCallback onPressed;
-  final Color? backgroundColor;
-  final Color? textColor;
-  final bool isLoading;
-  final double borderRadius;
+  final IconData icon;
 
   const CustomButton({
     super.key,
-    required this.text,
     required this.onPressed,
-    this.backgroundColor,
-    this.textColor,
-    this.isLoading = false,
-    this.borderRadius = 12.0,
+    required this.icon,
   });
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: double.infinity,
-      height: 55,
-      child: ElevatedButton(
-        onPressed: isLoading ? null : onPressed,
-        style: ElevatedButton.styleFrom(
-          backgroundColor: backgroundColor ?? Theme.of(context).primaryColor,
-          foregroundColor: textColor ?? Colors.white,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(borderRadius),
+    // We explicitly look up the primary color of the theme
+    final Color primaryColor = Theme.of(context).primaryColor;
+
+    return Container(
+      width: 60,
+      height: 60,
+      decoration: const BoxDecoration(
+        color: Colors.white, // Button body is white
+        shape: BoxShape.circle,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black26,
+            blurRadius: 10,
+            offset: Offset(0, 4),
           ),
-          elevation: 0,
-        ),
-        child: isLoading
-            ? const SizedBox(
-          height: 20,
-          width: 20,
-          child: CircularProgressIndicator(
-            strokeWidth: 2,
-            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-          ),
-        )
-            : Text(
-          text,
-          style: const TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
-          ),
+        ],
+      ),
+      child: RawMaterialButton(
+        onPressed: onPressed,
+        shape: const CircleBorder(),
+        elevation: 0.0,
+        child: Icon(
+          icon,
+          color: primaryColor, // Icon matches the current background role color
+          size: 30.0,
         ),
       ),
     );
