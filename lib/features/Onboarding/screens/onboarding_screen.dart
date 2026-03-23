@@ -1,8 +1,8 @@
-// lib/features/onboarding/screens/onboarding_screen.dart
-
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../core/app_theme.dart';
+import '../../Auth/screens/login_screen.dart';
+import '../../Auth/screens/signup_screen.dart';
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
@@ -16,27 +16,25 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   int _current = 0;
   UserRole? _selectedRole;
 
-  // Updated paths to match your assets in the root folder
   final List<Map<String, String>> _pages = const [
     {
-      'image': 'assets/Bluelink 1.png',
+      'image': 'assets/images/logo.png',
       'title': 'Welcome to Blue Link',
       'subtitle': 'Streamlining the entire blue economy from boat to business.',
     },
     {
-      'image': 'assets/Bluelink 1.png', // Pointing here until you create onboard_connect.png
+      'image': 'assets/images/onb1.png',
       'title': 'Connected Experts',
-      'subtitle': 'Interact with market leaders, logistics providers, and buyers in real-time.',
+      'subtitle': 'Interact with market leaders and logistics providers in real-time.',
     },
     {
-      'image': 'assets/Bluelink 1.png', // Pointing here until you create onboard_secure.png
+      'image': 'assets/images/spayment.png',
       'title': 'Secure Transactions',
       'subtitle': 'Fast, audited payments within the Blue Link ecosystem.',
     },
   ];
 
   void _showRoleSelection() {
-    // Filter out the admin role for the UI list
     final selectableRoles = UserRole.values.where((r) => r != UserRole.admin).toList();
 
     showDialog(
@@ -46,7 +44,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         builder: (context, setDialogState) => Dialog(
           insetPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(32)),
-          // Using your specific background color choice
           backgroundColor: const Color(0xFFE6F2FF),
           child: SingleChildScrollView(
             padding: const EdgeInsets.all(28),
@@ -57,50 +54,34 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     const SizedBox(width: 32),
-                    Image.asset('assets/logo.png', height: 35),
+                    Image.asset('assets/images/logo.png', height: 35),
                     IconButton(
                         onPressed: () => Navigator.pop(context),
-                        icon: const Icon(Icons.close_rounded, color: Colors.grey)
-                    ),
+                        icon: const Icon(Icons.close_rounded, color: Colors.grey)),
                   ],
                 ),
                 const SizedBox(height: 10),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
                   decoration: BoxDecoration(
-                      color: AppTheme.vibrantBlue.withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(12)
-                  ),
-                  child: Text(
-                      "Blue Link Ecosystem",
+                      color: AppTheme.vibrantBlue.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(12)),
+                  child: Text("Blue Link Ecosystem",
                       style: GoogleFonts.urbanist(
                           fontWeight: FontWeight.w800,
                           color: AppTheme.vibrantBlue,
                           fontSize: 12,
-                          letterSpacing: 1.1
-                      )
-                  ),
+                          letterSpacing: 1.1)),
                 ),
                 const SizedBox(height: 24),
-                Text(
-                    "Choose your role",
+                Text("Choose your role",
                     textAlign: TextAlign.center,
                     style: GoogleFonts.urbanist(
-                        fontSize: 30,
-                        fontWeight: FontWeight.w900,
-                        color: AppTheme.navyDark,
-                        height: 1.1
-                    )
-                ),
+                        fontSize: 30, fontWeight: FontWeight.w900, color: AppTheme.navyDark)),
                 const SizedBox(height: 12),
-                Text(
-                    "Select a role to tailor your experience.",
+                Text("Select a role to tailor your experience.",
                     textAlign: TextAlign.center,
-                    style: GoogleFonts.urbanist(
-                        color: Colors.black54,
-                        fontWeight: FontWeight.w500
-                    )
-                ),
+                    style: GoogleFonts.urbanist(color: Colors.black54, fontWeight: FontWeight.w500)),
                 const SizedBox(height: 32),
                 GridView.builder(
                   shrinkWrap: true,
@@ -109,16 +90,12 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       crossAxisCount: 2,
                       crossAxisSpacing: 16,
                       mainAxisSpacing: 16,
-                      childAspectRatio: 1.2
-                  ),
+                      childAspectRatio: 1.2),
                   itemCount: selectableRoles.length,
                   itemBuilder: (context, i) {
                     final role = selectableRoles[i];
-                    return _roleCard(
-                        role,
-                        _selectedRole == role,
-                            () => setDialogState(() => _selectedRole = role)
-                    );
+                    return _roleCard(role, _selectedRole == role,
+                            () => setDialogState(() => _selectedRole = role));
                   },
                 ),
                 const SizedBox(height: 32),
@@ -127,22 +104,21 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   height: 60,
                   child: ElevatedButton(
                     onPressed: _selectedRole == null ? null : () {
-                      Navigator.pop(context);
-                      // Navigator.pushNamed(context, '/signup', arguments: _selectedRole);
+                      Navigator.pop(context); // Close dialog
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => SignUpScreen(selectedRole: _selectedRole!),
+                        ),
+                      );
                     },
                     style: ElevatedButton.styleFrom(
                         backgroundColor: AppTheme.vibrantBlue,
                         elevation: 0,
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20))
-                    ),
-                    child: Text(
-                        "CONTINUE",
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20))),
+                    child: Text("CONTINUE",
                         style: GoogleFonts.urbanist(
-                            fontWeight: FontWeight.w800,
-                            color: Colors.white,
-                            letterSpacing: 1.2
-                        )
-                    ),
+                            fontWeight: FontWeight.w800, color: Colors.white, letterSpacing: 1.2)),
                   ),
                 ),
               ],
@@ -160,37 +136,31 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 250),
         decoration: BoxDecoration(
-          color: isSelected ? Colors.white : Colors.white.withValues(alpha: 0.5),
+          color: isSelected ? Colors.white : Colors.white.withOpacity(0.5),
           border: Border.all(
-              color: isSelected ? AppTheme.vibrantBlue : Colors.transparent,
-              width: 2.5
-          ),
+              color: isSelected ? AppTheme.vibrantBlue : Colors.transparent, width: 2.5),
           borderRadius: BorderRadius.circular(24),
-          boxShadow: isSelected ? [
+          boxShadow: isSelected
+              ? [
             BoxShadow(
-                color: AppTheme.vibrantBlue.withValues(alpha: 0.1),
+                color: AppTheme.vibrantBlue.withOpacity(0.1),
                 blurRadius: 10,
-                offset: const Offset(0, 4)
-            )
-          ] : [],
+                offset: const Offset(0, 4))
+          ]
+              : [],
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-                _getRoleIcon(role),
-                color: isSelected ? AppTheme.vibrantBlue : AppTheme.navyDark.withValues(alpha: 0.4),
-                size: 32
-            ),
+            Icon(_getRoleIcon(role),
+                color: isSelected ? AppTheme.vibrantBlue : AppTheme.navyDark.withOpacity(0.4),
+                size: 32),
             const SizedBox(height: 10),
-            Text(
-                role.name[0].toUpperCase() + role.name.substring(1),
+            Text(role.name[0].toUpperCase() + role.name.substring(1),
                 style: GoogleFonts.urbanist(
                     fontWeight: isSelected ? FontWeight.w900 : FontWeight.w700,
                     fontSize: 14,
-                    color: isSelected ? AppTheme.vibrantBlue : AppTheme.navyDark
-                )
-            ),
+                    color: isSelected ? AppTheme.vibrantBlue : AppTheme.navyDark)),
           ],
         ),
       ),
@@ -215,6 +185,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
+        top: false,
         child: Column(
           children: [
             Expanded(
@@ -222,42 +193,54 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 controller: _controller,
                 itemCount: _pages.length,
                 onPageChanged: (i) => setState(() => _current = i),
-                itemBuilder: (_, i) => Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 40),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                itemBuilder: (_, i) {
+                  final bool isFullBleed = _pages[i]['image'] == 'assets/images/spayment.png';
+
+                  return Column(
                     children: [
-                      ConstrainedBox(
-                        constraints: BoxConstraints(
-                            maxHeight: i == 0 ? screenHeight * 0.25 : screenHeight * 0.35
+                      // Inside your itemBuilder:
+                      SizedBox(
+                        width: double.infinity,
+                        height: isFullBleed ? screenHeight * 0.45 : screenHeight * 0.35,
+                        child: Padding(
+                          // Adds space only at the top of the image
+                          padding: const EdgeInsets.only(top: 45.0),
+                          child: Image.asset(
+                            _pages[i]['image']!,
+                            fit: isFullBleed ? BoxFit.cover : BoxFit.contain,
+                            errorBuilder: (context, error, stackTrace) => Container(
+                              color: AppTheme.paleAzure,
+                              child: const Icon(Icons.image_not_supported, size: 50),
+                            ),
+                          ),
                         ),
-                        child: Image.asset(_pages[i]['image']!, fit: BoxFit.contain),
                       ),
-                      const SizedBox(height: 60),
-                      Text(
-                          _pages[i]['title']!,
-                          textAlign: TextAlign.center,
-                          style: GoogleFonts.urbanist(
-                              fontSize: 32,
-                              fontWeight: FontWeight.w900,
-                              color: AppTheme.navyDark,
-                              height: 1.1
-                          )
-                      ),
-                      const SizedBox(height: 20),
-                      Text(
-                          _pages[i]['subtitle']!,
-                          textAlign: TextAlign.center,
-                          style: GoogleFonts.urbanist(
-                              fontSize: 16,
-                              color: Colors.black54,
-                              fontWeight: FontWeight.w500,
-                              height: 1.5
-                          )
+                      const SizedBox(height: 40),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 40),
+                        child: Column(
+                          children: [
+                            Text(_pages[i]['title']!,
+                                textAlign: TextAlign.center,
+                                style: GoogleFonts.urbanist(
+                                    fontSize: 32,
+                                    fontWeight: FontWeight.w900,
+                                    color: AppTheme.navyDark,
+                                    height: 1.1)),
+                            const SizedBox(height: 20),
+                            Text(_pages[i]['subtitle']!,
+                                textAlign: TextAlign.center,
+                                style: GoogleFonts.urbanist(
+                                    fontSize: 16,
+                                    color: Colors.black54,
+                                    fontWeight: FontWeight.w500,
+                                    height: 1.5)),
+                          ],
+                        ),
                       ),
                     ],
-                  ),
-                ),
+                  );
+                },
               ),
             ),
             Padding(
@@ -266,21 +249,23 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 children: [
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: List.generate(_pages.length, (i) => AnimatedContainer(
-                      duration: const Duration(milliseconds: 300),
-                      margin: const EdgeInsets.symmetric(horizontal: 4),
-                      height: 8,
-                      width: _current == i ? 24 : 8,
-                      decoration: BoxDecoration(
-                        color: _current == i ? AppTheme.vibrantBlue : Colors.grey[200],
-                        borderRadius: BorderRadius.circular(4),
-                      ),
-                    )),
+                    children: List.generate(
+                        _pages.length,
+                            (i) => AnimatedContainer(
+                          duration: const Duration(milliseconds: 300),
+                          margin: const EdgeInsets.symmetric(horizontal: 4),
+                          height: 8,
+                          width: _current == i ? 24 : 8,
+                          decoration: BoxDecoration(
+                            color: _current == i ? AppTheme.vibrantBlue : Colors.grey[200],
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                        )),
                   ),
                   const SizedBox(height: 48),
                   SizedBox(
                     width: double.infinity,
-                    height: 60,
+                    height: 45,
                     child: ElevatedButton(
                       onPressed: _current == _pages.length - 1
                           ? _showRoleSelection
@@ -290,38 +275,44 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppTheme.vibrantBlue,
                         foregroundColor: Colors.white,
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(60)),
                         elevation: 0,
                       ),
                       child: Text(
                         _current == _pages.length - 1 ? 'GET STARTED' : 'NEXT',
                         style: GoogleFonts.urbanist(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w800,
+                          fontSize: 17,
+                          fontWeight: FontWeight.w700,
                           letterSpacing: 1.1,
                         ),
                       ),
                     ),
                   ),
                   const SizedBox(height: 20),
-                  TextButton(
-                    onPressed: () {},
-                    child: RichText(
-                      text: TextSpan(
-                        style: GoogleFonts.urbanist(color: Colors.grey[600], fontSize: 14),
-                        children: [
-                          const TextSpan(text: "Already have an account? "),
-                          TextSpan(
-                            text: "Sign in",
-                            style: TextStyle(
-                                fontWeight: FontWeight.w900,
-                                color: AppTheme.vibrantBlue
-                            ),
-                          ),
-                        ],
+              TextButton(
+                onPressed: () {
+                  // Navigates to the Login Screen
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const LoginScreen()),
+                  );
+                },
+                child: RichText(
+                  text: TextSpan(
+                    style: GoogleFonts.urbanist(color: Colors.grey[600], fontSize: 14),
+                    children: [
+                      const TextSpan(text: "Already have an account? "),
+                      TextSpan(
+                        text: "Sign in",
+                        style: TextStyle(
+                          fontWeight: FontWeight.w900,
+                          color: AppTheme.vibrantBlue,
+                        ),
                       ),
-                    ),
+                    ],
                   ),
+                ),
+              ),
                 ],
               ),
             ),

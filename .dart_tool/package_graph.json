@@ -8,6 +8,7 @@
       "version": "1.0.0+1",
       "dependencies": [
         "flutter",
+        "google_fonts",
         "smooth_page_indicator"
       ],
       "devDependencies": [
