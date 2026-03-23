@@ -14,129 +14,182 @@ class OnboardingScreen extends StatefulWidget {
 class _OnboardingScreenState extends State<OnboardingScreen> {
   final PageController _controller = PageController();
   int _current = 0;
+  UserRole? _selectedRole;
 
+  // Updated paths to match your assets in the root folder
   final List<Map<String, String>> _pages = const [
     {
-      'image': 'assets/images/logo_main.png', // Or use your Bluelink 1.png logo
+      'image': 'assets/Bluelink 1.png',
       'title': 'Welcome to Blue Link',
       'subtitle': 'Streamlining the entire blue economy from boat to business.',
     },
     {
-      'image': 'assets/images/onboard_connect.png',
+      'image': 'assets/onboard_connect.png',
       'title': 'Connected Experts',
       'subtitle': 'Interact with market leaders, logistics providers, and buyers in real-time.',
     },
     {
-      'image': 'assets/images/onboard_secure.png',
+      'image': 'assets/onboard_secure.png',
       'title': 'Secure Transactions',
       'subtitle': 'Fast, audited payments within the Blue Link ecosystem.',
     },
   ];
 
   void _showRoleSelection() {
-    showModalBottomSheet(
+    // Filter out the admin role for the UI list
+    final selectableRoles = UserRole.values.where((r) => r != UserRole.admin).toList();
+
+    showDialog(
       context: context,
-      backgroundColor: Colors.white,
-      isScrollControlled: true,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(40)),
-      ),
-      builder: (_) => Container(
-        padding: const EdgeInsets.fromLTRB(24, 12, 24, 40),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              width: 50,
-              height: 5,
-              decoration: BoxDecoration(
-                color: Colors.grey[300],
-                borderRadius: BorderRadius.circular(10),
-              ),
-            ),
-            const SizedBox(height: 30),
-            Text(
-              "Who are you?",
-              style: GoogleFonts.urbanist(
-                fontSize: 28,
-                fontWeight: FontWeight.w900,
-                color: AppTheme.navyDark,
-              ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              "Select your primary role in the ecosystem",
-              style: GoogleFonts.urbanist(color: Colors.grey[600], fontSize: 15),
-            ),
-            const SizedBox(height: 32),
-
-            // Role Grid (Fisherman, Buyer, Seller, Driver, Storage, Admin)
-            Flexible(
-              child: GridView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 16,
-                  mainAxisSpacing: 16,
-                  childAspectRatio: 1.2,
+      barrierDismissible: true,
+      builder: (context) => StatefulBuilder(
+        builder: (context, setDialogState) => Dialog(
+          insetPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(32)),
+          // Using your specific background color choice
+          backgroundColor: const Color(0xFFE6F2FF),
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(28),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const SizedBox(width: 32),
+                    Image.asset('assets/Bluelink 1.png', height: 35),
+                    IconButton(
+                        onPressed: () => Navigator.pop(context),
+                        icon: const Icon(Icons.close_rounded, color: Colors.grey)
+                    ),
+                  ],
                 ),
-                itemCount: UserRole.values.length,
-                itemBuilder: (context, i) {
-                  final role = UserRole.values[i];
-                  return _roleCard(role);
-                },
-              ),
-            ),
-            const SizedBox(height: 30),
-
-            SizedBox(
-              width: double.infinity,
-              height: 60,
-              child: ElevatedButton(
-                onPressed: () => Navigator.pop(context),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppTheme.vibrantBlue,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                  elevation: 0,
-                ),
-                child: Text(
-                  "CONTINUE",
-                  style: GoogleFonts.urbanist(
-                    fontWeight: FontWeight.w800,
-                    letterSpacing: 1.2,
-                    color: Colors.white,
+                const SizedBox(height: 10),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+                  decoration: BoxDecoration(
+                      color: AppTheme.vibrantBlue.withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(12)
+                  ),
+                  child: Text(
+                      "Blue Link Ecosystem",
+                      style: GoogleFonts.urbanist(
+                          fontWeight: FontWeight.w800,
+                          color: AppTheme.vibrantBlue,
+                          fontSize: 12,
+                          letterSpacing: 1.1
+                      )
                   ),
                 ),
-              ),
+                const SizedBox(height: 24),
+                Text(
+                    "Choose your role",
+                    textAlign: TextAlign.center,
+                    style: GoogleFonts.urbanist(
+                        fontSize: 30,
+                        fontWeight: FontWeight.w900,
+                        color: AppTheme.navyDark,
+                        height: 1.1
+                    )
+                ),
+                const SizedBox(height: 12),
+                Text(
+                    "Select a role to tailor your experience.",
+                    textAlign: TextAlign.center,
+                    style: GoogleFonts.urbanist(
+                        color: Colors.black54,
+                        fontWeight: FontWeight.w500
+                    )
+                ),
+                const SizedBox(height: 32),
+                GridView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      crossAxisSpacing: 16,
+                      mainAxisSpacing: 16,
+                      childAspectRatio: 1.2
+                  ),
+                  itemCount: selectableRoles.length,
+                  itemBuilder: (context, i) {
+                    final role = selectableRoles[i];
+                    return _roleCard(
+                        role,
+                        _selectedRole == role,
+                            () => setDialogState(() => _selectedRole = role)
+                    );
+                  },
+                ),
+                const SizedBox(height: 32),
+                SizedBox(
+                  width: double.infinity,
+                  height: 60,
+                  child: ElevatedButton(
+                    onPressed: _selectedRole == null ? null : () {
+                      Navigator.pop(context);
+                      // Navigator.pushNamed(context, '/signup', arguments: _selectedRole);
+                    },
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: AppTheme.vibrantBlue,
+                        elevation: 0,
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20))
+                    ),
+                    child: Text(
+                        "CONTINUE",
+                        style: GoogleFonts.urbanist(
+                            fontWeight: FontWeight.w800,
+                            color: Colors.white,
+                            letterSpacing: 1.2
+                        )
+                    ),
+                  ),
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );
   }
 
-  Widget _roleCard(UserRole role) {
+  Widget _roleCard(UserRole role, bool isSelected, VoidCallback onTap) {
     return InkWell(
-      onTap: () => setState(() => /* Update Global State Here */ {}),
+      onTap: onTap,
       borderRadius: BorderRadius.circular(24),
-      child: Container(
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 250),
         decoration: BoxDecoration(
-          border: Border.all(color: Colors.grey[200]!),
+          color: isSelected ? Colors.white : Colors.white.withValues(alpha: 0.5),
+          border: Border.all(
+              color: isSelected ? AppTheme.vibrantBlue : Colors.transparent,
+              width: 2.5
+          ),
           borderRadius: BorderRadius.circular(24),
+          boxShadow: isSelected ? [
+            BoxShadow(
+                color: AppTheme.vibrantBlue.withValues(alpha: 0.1),
+                blurRadius: 10,
+                offset: const Offset(0, 4)
+            )
+          ] : [],
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(_getRoleIcon(role), color: AppTheme.vibrantBlue, size: 32),
+            Icon(
+                _getRoleIcon(role),
+                color: isSelected ? AppTheme.vibrantBlue : AppTheme.navyDark.withValues(alpha: 0.4),
+                size: 32
+            ),
             const SizedBox(height: 10),
             Text(
-              role.name.toUpperCase(),
-              style: GoogleFonts.urbanist(
-                fontWeight: FontWeight.w800,
-                fontSize: 12,
-                color: AppTheme.navyDark,
-              ),
+                role.name[0].toUpperCase() + role.name.substring(1),
+                style: GoogleFonts.urbanist(
+                    fontWeight: isSelected ? FontWeight.w900 : FontWeight.w700,
+                    fontSize: 14,
+                    color: isSelected ? AppTheme.vibrantBlue : AppTheme.navyDark
+                )
             ),
           ],
         ),
@@ -146,17 +199,19 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   IconData _getRoleIcon(UserRole role) {
     switch (role) {
-      case UserRole.fisherman: return Icons.anchor;
-      case UserRole.buyer: return Icons.shopping_basket_outlined;
-      case UserRole.seller: return Icons.storefront;
-      case UserRole.driver: return Icons.local_shipping_outlined;
-      case UserRole.storage: return Icons.warehouse_outlined;
-      case UserRole.admin: return Icons.admin_panel_settings_outlined;
+      case UserRole.fisherman: return Icons.anchor_rounded;
+      case UserRole.buyer:     return Icons.shopping_bag_outlined;
+      case UserRole.seller:    return Icons.storefront_rounded;
+      case UserRole.driver:    return Icons.local_shipping_outlined;
+      case UserRole.storage:   return Icons.warehouse_outlined;
+      case UserRole.admin:     return Icons.admin_panel_settings_outlined;
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final double screenHeight = MediaQuery.of(context).size.height;
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -167,49 +222,48 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 controller: _controller,
                 itemCount: _pages.length,
                 onPageChanged: (i) => setState(() => _current = i),
-                itemBuilder: (_, i) {
-                  final page = _pages[i];
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 40),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        // Responsive image sizing like your tailor example
-                        Image.asset(page['image']!, height: i == 0 ? 120 : 260, fit: BoxFit.contain),
-                        const SizedBox(height: 40),
-                        Text(
-                          page['title']!,
+                itemBuilder: (_, i) => Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 40),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      ConstrainedBox(
+                        constraints: BoxConstraints(
+                            maxHeight: i == 0 ? screenHeight * 0.25 : screenHeight * 0.35
+                        ),
+                        child: Image.asset(_pages[i]['image']!, fit: BoxFit.contain),
+                      ),
+                      const SizedBox(height: 60),
+                      Text(
+                          _pages[i]['title']!,
                           textAlign: TextAlign.center,
                           style: GoogleFonts.urbanist(
-                            fontSize: 32,
-                            fontWeight: FontWeight.w900,
-                            color: AppTheme.navyDark,
-                            height: 1.1,
-                          ),
-                        ),
-                        const SizedBox(height: 16),
-                        Text(
-                          page['subtitle']!,
+                              fontSize: 32,
+                              fontWeight: FontWeight.w900,
+                              color: AppTheme.navyDark,
+                              height: 1.1
+                          )
+                      ),
+                      const SizedBox(height: 20),
+                      Text(
+                          _pages[i]['subtitle']!,
                           textAlign: TextAlign.center,
                           style: GoogleFonts.urbanist(
-                            fontSize: 16,
-                            color: Colors.black54,
-                            height: 1.5,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ],
-                    ),
-                  );
-                },
+                              fontSize: 16,
+                              color: Colors.black54,
+                              fontWeight: FontWeight.w500,
+                              height: 1.5
+                          )
+                      ),
+                    ],
+                  ),
+                ),
               ),
             ),
-
             Padding(
-              padding: const EdgeInsets.all(32),
+              padding: const EdgeInsets.fromLTRB(32, 0, 32, 40),
               child: Column(
                 children: [
-                  // Animated Indicators
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: List.generate(_pages.length, (i) => AnimatedContainer(
@@ -223,16 +277,16 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       ),
                     )),
                   ),
-                  const SizedBox(height: 40),
-
-                  // Primary Action Button
+                  const SizedBox(height: 48),
                   SizedBox(
                     width: double.infinity,
                     height: 60,
                     child: ElevatedButton(
                       onPressed: _current == _pages.length - 1
                           ? _showRoleSelection
-                          : () => _controller.nextPage(duration: const Duration(milliseconds: 500), curve: Curves.easeInOutCubic),
+                          : () => _controller.nextPage(
+                          duration: const Duration(milliseconds: 500),
+                          curve: Curves.easeInOutCubic),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppTheme.vibrantBlue,
                         foregroundColor: Colors.white,
@@ -241,13 +295,15 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       ),
                       child: Text(
                         _current == _pages.length - 1 ? 'GET STARTED' : 'NEXT',
-                        style: GoogleFonts.urbanist(fontSize: 16, fontWeight: FontWeight.w800, letterSpacing: 1.1),
+                        style: GoogleFonts.urbanist(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w800,
+                          letterSpacing: 1.1,
+                        ),
                       ),
                     ),
                   ),
-                  const SizedBox(height: 16),
-
-                  // Secondary Sign In Link
+                  const SizedBox(height: 20),
                   TextButton(
                     onPressed: () {},
                     child: RichText(
@@ -257,7 +313,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                           const TextSpan(text: "Already have an account? "),
                           TextSpan(
                             text: "Sign in",
-                            style: TextStyle(fontWeight: FontWeight.w900, color: AppTheme.vibrantBlue),
+                            style: TextStyle(
+                                fontWeight: FontWeight.w900,
+                                color: AppTheme.vibrantBlue
+                            ),
                           ),
                         ],
                       ),

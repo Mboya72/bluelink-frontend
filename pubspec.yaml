@@ -25,4 +25,4 @@ flutter:
 
   # Added: You need this section for your onboarding images to show up
   assets:
-    - assets/images/
+    - assets/images/logo.png

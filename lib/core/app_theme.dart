@@ -1,17 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart'; // Import this
+import 'package:google_fonts/google_fonts.dart';
 
+// Ensure this matches your project's role requirements
 enum UserRole { fisherman, buyer, seller, driver, storage, admin }
 
 class AppTheme {
+  // --- Updated Palette ---
   static const Color vibrantBlue = Color(0xFF1E88E5);
-  static const Color paleAzure = Color(0xFFE3F2FD);
   static const Color navyDark = Color(0xFF0D47A1);
+
+  // Your requested background color
+  static const Color softBlueBg = Color(0xFFE6F2FF);
 
   static Color getRoleColor(UserRole role) => vibrantBlue;
 
   static ThemeData getTheme() {
-    // We create the base text theme using Urbanist
     final textTheme = GoogleFonts.urbanistTextTheme().copyWith(
       headlineMedium: GoogleFonts.urbanist(
         color: navyDark,
@@ -32,28 +35,33 @@ class AppTheme {
 
     return ThemeData(
       useMaterial3: true,
-      scaffoldBackgroundColor: paleAzure,
+
+      // Applied your requested color here
+      scaffoldBackgroundColor: softBlueBg,
+
       primaryColor: vibrantBlue,
-
-      // This applies Urbanist to every widget in the app
       textTheme: textTheme,
-
-      // Specifically for buttons and input fields
       fontFamily: GoogleFonts.urbanist().fontFamily,
 
       colorScheme: ColorScheme.fromSeed(
         seedColor: vibrantBlue,
         primary: vibrantBlue,
         secondary: navyDark,
-        surface: Colors.white,
+        // Applied to cards and sheets for a unified look
+        surface: softBlueBg,
       ),
 
-      // Update button themes to match the new font weight
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
+          elevation: 0,
+          backgroundColor: vibrantBlue,
+          foregroundColor: Colors.white,
           textStyle: GoogleFonts.urbanist(
             fontWeight: FontWeight.bold,
             fontSize: 16,
+          ),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
           ),
         ),
       ),
