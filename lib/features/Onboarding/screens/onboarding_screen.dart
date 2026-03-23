@@ -24,12 +24,12 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       'subtitle': 'Streamlining the entire blue economy from boat to business.',
     },
     {
-      'image': 'assets/onboard_connect.png',
+      'image': 'assets/Bluelink 1.png', // Pointing here until you create onboard_connect.png
       'title': 'Connected Experts',
       'subtitle': 'Interact with market leaders, logistics providers, and buyers in real-time.',
     },
     {
-      'image': 'assets/onboard_secure.png',
+      'image': 'assets/Bluelink 1.png', // Pointing here until you create onboard_secure.png
       'title': 'Secure Transactions',
       'subtitle': 'Fast, audited payments within the Blue Link ecosystem.',
     },
@@ -57,7 +57,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     const SizedBox(width: 32),
-                    Image.asset('assets/Bluelink 1.png', height: 35),
+                    Image.asset('assets/logo.png', height: 35),
                     IconButton(
                         onPressed: () => Navigator.pop(context),
                         icon: const Icon(Icons.close_rounded, color: Colors.grey)
