@@ -23,7 +23,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       'subtitle': 'Streamlining the entire blue economy from boat to business.',
     },
     {
-      'image': 'assets/images/onb1.png',
+      'image': 'assets/images/fisher1.png',
       'title': 'Connected Experts',
       'subtitle': 'Interact with market leaders and logistics providers in real-time.',
     },
@@ -104,7 +104,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   height: 60,
                   child: ElevatedButton(
                     onPressed: _selectedRole == null ? null : () {
-                      Navigator.pop(context); // Close dialog
+                      Navigator.pop(context);
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -194,20 +194,27 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 itemCount: _pages.length,
                 onPageChanged: (i) => setState(() => _current = i),
                 itemBuilder: (_, i) {
-                  final bool isFullBleed = _pages[i]['image'] == 'assets/images/spayment.png';
+                  final String currentImagePath = _pages[i]['image']!;
+                  final bool isFisher = currentImagePath == 'assets/images/fisher1.png';
+                  final bool isPayment = currentImagePath == 'assets/images/spayment.png';
 
                   return Column(
                     children: [
-                      // Inside your itemBuilder:
                       SizedBox(
                         width: double.infinity,
-                        height: isFullBleed ? screenHeight * 0.45 : screenHeight * 0.35,
+                        height: (isFisher || isPayment) ? screenHeight * 0.55 : screenHeight * 0.35,
                         child: Padding(
-                          // Adds space only at the top of the image
-                          padding: const EdgeInsets.only(top: 45.0),
+                          // ADD THIS: 30.0 horizontal padding only for the fisher image
+                          padding: EdgeInsets.symmetric(
+                            horizontal: isFisher ? 30.0 : 0.0,
+                            vertical: 45.0,
+                          ),
                           child: Image.asset(
-                            _pages[i]['image']!,
-                            fit: isFullBleed ? BoxFit.cover : BoxFit.contain,
+                            currentImagePath,
+                            // Using BoxFit.contain ensures it scales down to fit the new narrower width
+                            fit: isFisher
+                                ? BoxFit.contain
+                                : (isPayment ? BoxFit.cover : BoxFit.contain),
                             errorBuilder: (context, error, stackTrace) => Container(
                               color: AppTheme.paleAzure,
                               child: const Icon(Icons.image_not_supported, size: 50),
@@ -265,7 +272,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   const SizedBox(height: 48),
                   SizedBox(
                     width: double.infinity,
-                    height: 45,
+                    height: 55, // Slightly increased height for better tap target
                     child: ElevatedButton(
                       onPressed: _current == _pages.length - 1
                           ? _showRoleSelection
@@ -275,44 +282,43 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppTheme.vibrantBlue,
                         foregroundColor: Colors.white,
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(60)),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
                         elevation: 0,
                       ),
                       child: Text(
                         _current == _pages.length - 1 ? 'GET STARTED' : 'NEXT',
                         style: GoogleFonts.urbanist(
-                          fontSize: 17,
-                          fontWeight: FontWeight.w700,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w800,
                           letterSpacing: 1.1,
                         ),
                       ),
                     ),
                   ),
                   const SizedBox(height: 20),
-              TextButton(
-                onPressed: () {
-                  // Navigates to the Login Screen
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const LoginScreen()),
-                  );
-                },
-                child: RichText(
-                  text: TextSpan(
-                    style: GoogleFonts.urbanist(color: Colors.grey[600], fontSize: 14),
-                    children: [
-                      const TextSpan(text: "Already have an account? "),
-                      TextSpan(
-                        text: "Sign in",
-                        style: TextStyle(
-                          fontWeight: FontWeight.w900,
-                          color: AppTheme.vibrantBlue,
-                        ),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const LoginScreen()),
+                      );
+                    },
+                    child: RichText(
+                      text: TextSpan(
+                        style: GoogleFonts.urbanist(color: Colors.grey[600], fontSize: 14),
+                        children: [
+                          const TextSpan(text: "Already have an account? "),
+                          TextSpan(
+                            text: "Sign in",
+                            style: TextStyle(
+                              fontWeight: FontWeight.w900,
+                              color: AppTheme.vibrantBlue,
+                            ),
+                          ),
+                        ],
                       ),
-                    ],
+                    ),
                   ),
-                ),
-              ),
                 ],
               ),
             ),

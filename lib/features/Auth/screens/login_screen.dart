@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../core/app_theme.dart';
+import '../auth_utils.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
@@ -41,10 +42,7 @@ class LoginScreen extends StatelessWidget {
               _buildGoogleButton("Login with Google", () {}),
               const SizedBox(height: 30),
               TextButton(
-                onPressed: () {
-                  // Navigate to the onboarding or role selection if they need an account
-                  Navigator.pop(context);
-                },
+                onPressed: () => AuthUtils.showRoleSelection(context),
                 child: RichText(
                   text: TextSpan(
                     style: GoogleFonts.urbanist(color: Colors.grey[600], fontSize: 14),
@@ -52,10 +50,7 @@ class LoginScreen extends StatelessWidget {
                       const TextSpan(text: "Don't have an account? "),
                       TextSpan(
                         text: "Sign Up",
-                        style: TextStyle(
-                          fontWeight: FontWeight.w900,
-                          color: AppTheme.vibrantBlue,
-                        ),
+                        style: TextStyle(fontWeight: FontWeight.w900, color: AppTheme.vibrantBlue),
                       ),
                     ],
                   ),
