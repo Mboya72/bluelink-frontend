@@ -20,17 +20,17 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     {
       'image': 'assets/images/logo.png',
       'title': 'Welcome to Blue Link',
-      'subtitle': 'Streamlining the entire blue economy from boat to business.',
+      'subtitle': 'The digital home for the blue economy. Connecting boats to businesses.',
     },
     {
       'image': 'assets/images/fisher1.png',
-      'title': 'Connected Experts',
-      'subtitle': 'Interact with market leaders and logistics providers in real-time.',
+      'title': 'Direct Market Access',
+      'subtitle': 'Skip the middlemen. Connect directly with buyers and premium logistics.',
     },
     {
-      'image': 'assets/images/spayment.png',
-      'title': 'Secure Transactions',
-      'subtitle': 'Fast, audited payments within the Blue Link ecosystem.',
+      'image': 'assets/images/payment.png',
+      'title': 'Instant Payouts', // Focus on "Getting Paid" rather than "Security"
+      'subtitle': 'Track your earnings and receive payments instantly upon delivery.',
     },
   ];
 
@@ -183,7 +183,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     final double screenHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: const Color(0xFFE6F2FF),
       body: SafeArea(
         top: false,
         child: Column(
@@ -195,26 +195,27 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 onPageChanged: (i) => setState(() => _current = i),
                 itemBuilder: (_, i) {
                   final String currentImagePath = _pages[i]['image']!;
-                  final bool isFisher = currentImagePath == 'assets/images/fisher1.png';
-                  final bool isPayment = currentImagePath == 'assets/images/spayment.png';
+                  final bool isLogo = i == 0; // Check for the first page
+                  final bool isFisher = i == 1;
+                  final bool isPayout = i == 2;
 
                   return Column(
                     children: [
+                      const SizedBox(height: 19),
                       SizedBox(
-                        width: double.infinity,
-                        height: (isFisher || isPayment) ? screenHeight * 0.55 : screenHeight * 0.35,
+                        width: const ,
+                        // If it's the logo, we give it less vertical height
+                        height: isLogo ? screenHeight * 0.25 : (isFisher || isPayout ? screenHeight * 0.55 : screenHeight * 0.35),
                         child: Padding(
-                          // ADD THIS: 30.0 horizontal padding only for the fisher image
                           padding: EdgeInsets.symmetric(
-                            horizontal: isFisher ? 30.0 : 0.0,
-                            vertical: 45.0,
+                            // Add 80px horizontal padding to the logo to shrink it safely
+                            horizontal: isLogo ? 80.0 : (isFisher ? 30.0 : 0.0),
+                            vertical: isLogo ? 20.0 : 45.0,
                           ),
                           child: Image.asset(
                             currentImagePath,
-                            // Using BoxFit.contain ensures it scales down to fit the new narrower width
-                            fit: isFisher
-                                ? BoxFit.contain
-                                : (isPayment ? BoxFit.cover : BoxFit.contain),
+                            // Logos should always be contain, never cover
+                            fit: (isLogo || isFisher) ? BoxFit.contain : BoxFit.cover,
                             errorBuilder: (context, error, stackTrace) => Container(
                               color: AppTheme.paleAzure,
                               child: const Icon(Icons.image_not_supported, size: 50),
@@ -230,9 +231,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                             Text(_pages[i]['title']!,
                                 textAlign: TextAlign.center,
                                 style: GoogleFonts.urbanist(
-                                    fontSize: 32,
-                                    fontWeight: FontWeight.w900,
-                                    color: AppTheme.navyDark,
+                                    fontSize: 42,
+                                    fontWeight: FontWeight.w700,
+                                    color: const Color(0xFF0080FF),
                                     height: 1.1)),
                             const SizedBox(height: 20),
                             Text(_pages[i]['subtitle']!,
@@ -264,7 +265,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                           height: 8,
                           width: _current == i ? 24 : 8,
                           decoration: BoxDecoration(
-                            color: _current == i ? AppTheme.vibrantBlue : Colors.grey[200],
+                            color: _current == i ? AppTheme.vibrantBlue : Colors.white,
                             borderRadius: BorderRadius.circular(4),
                           ),
                         )),
@@ -282,11 +283,11 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppTheme.vibrantBlue,
                         foregroundColor: Colors.white,
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
                         elevation: 0,
                       ),
                       child: Text(
-                        _current == _pages.length - 1 ? 'GET STARTED' : 'NEXT',
+                        _current == _pages.length - 1 ? 'Get Started' : 'Next',
                         style: GoogleFonts.urbanist(
                           fontSize: 16,
                           fontWeight: FontWeight.w800,

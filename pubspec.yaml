@@ -19,10 +19,26 @@ dev_dependencies:
     sdk: flutter
   flutter_lints: ^5.0.0
   cupertino_icons: ^1.0.8
-  google_fonts: ^6.2.1
+  flutter_native_splash: ^2.4.7
 
 flutter:
   uses-material-design: true
 
   assets:
     - assets/images/
+
+flutter_native_splash:
+  color: "#E6F2FF"
+
+  image: assets/images/logo.png
+
+  android_gravity: center
+  ios_content_mode: center
+  web_image_mode: center
+
+  fullscreen: true
+
+  android_12:
+    image: assets/images/logo.png
+    color: "#E6F2FF"
+    icon_background_color: "#E6F2FF"
