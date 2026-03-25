@@ -23,7 +23,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       'subtitle': 'The digital home for the blue economy. Connecting boats to businesses.',
     },
     {
-      'image': 'assets/images/fisher1.png',
+      'image': 'assets/images/market.png',
       'title': 'Direct Market Access',
       'subtitle': 'Skip the middlemen. Connect directly with buyers and premium logistics.',
     },
@@ -195,30 +195,28 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 onPageChanged: (i) => setState(() => _current = i),
                 itemBuilder: (_, i) {
                   final String currentImagePath = _pages[i]['image']!;
-                  final bool isLogo = i == 0; // Check for the first page
+                  final bool isLogo = i == 0;
                   final bool isFisher = i == 1;
                   final bool isPayout = i == 2;
 
                   return Column(
                     children: [
-                      const SizedBox(height: 19),
-                      SizedBox(
-                        width: const ,
-                        // If it's the logo, we give it less vertical height
-                        height: isLogo ? screenHeight * 0.25 : (isFisher || isPayout ? screenHeight * 0.55 : screenHeight * 0.35),
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(
-                            // Add 80px horizontal padding to the logo to shrink it safely
-                            horizontal: isLogo ? 80.0 : (isFisher ? 30.0 : 0.0),
-                            vertical: isLogo ? 20.0 : 45.0,
-                          ),
-                          child: Image.asset(
-                            currentImagePath,
-                            // Logos should always be contain, never cover
-                            fit: (isLogo || isFisher) ? BoxFit.contain : BoxFit.cover,
-                            errorBuilder: (context, error, stackTrace) => Container(
-                              color: AppTheme.paleAzure,
-                              child: const Icon(Icons.image_not_supported, size: 50),
+                      const SizedBox(height: 90),
+                      // 1. Remove double.infinity and use a Center + Constrained Container
+                      Center(
+                        child: Container(
+                          // Use 85% of screen width for a clean "inset" look
+                          width: MediaQuery.of(context).size.width * 0.85,
+                          height: isLogo
+                              ? screenHeight * 0.25
+                              : (isFisher || isPayout ? screenHeight * 0.45 : screenHeight * 0.35),
+                          child: Padding(
+                            padding: EdgeInsets.all(isPayout ? 30.0 : 0.0), // Internal padding for the "card"
+                            child: Image.asset(
+                              currentImagePath,
+                              // BoxFit.contain is much safer for "objects" like payment cards
+                              fit: (isLogo || isFisher || isPayout) ? BoxFit.contain : BoxFit.cover,
+                              errorBuilder: (context, error, stackTrace) => const Icon(Icons.payments_outlined, size: 50),
                             ),
                           ),
                         ),
