@@ -12,6 +12,7 @@ class MyShopScreen extends StatefulWidget {
   State<MyShopScreen> createState() => _MyShopScreenState();
 }
 
+// REMOVED SingleTickerProviderStateMixin here to fix the 'NoSuchMethodError'
 class _MyShopScreenState extends State<MyShopScreen> {
   final ScrollController _shopScrollController = ScrollController();
 
@@ -26,10 +27,10 @@ class _MyShopScreenState extends State<MyShopScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // This ensures the status bar icons are dark (black) for the Shop view
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle.dark.copyWith(
         statusBarColor: Colors.transparent,
+        statusBarIconBrightness: Brightness.dark,
       ),
       child: Scaffold(
         backgroundColor: const Color(0xFFF8FBFF),
@@ -62,13 +63,13 @@ class _MyShopScreenState extends State<MyShopScreen> {
 
   PreferredSizeWidget _buildShopAppBar() {
     return AppBar(
-      systemOverlayStyle: SystemUiOverlayStyle.dark, // Darkens phone icons
+      systemOverlayStyle: SystemUiOverlayStyle.dark,
       backgroundColor: Colors.transparent,
       elevation: 0,
       scrolledUnderElevation: 0,
       centerTitle: true,
-      title: Text("Shop",
-          style: GoogleFonts.urbanist(fontWeight: FontWeight.w900, fontSize: 24, color: AppTheme.navyDark)),
+      title: Text("My Shop",
+          style: GoogleFonts.urbanist(fontWeight: FontWeight.w900, fontSize: 18, color: AppTheme.navyDark)),
       actions: [
         IconButton(onPressed: () {}, icon: const Icon(Icons.share_outlined, color: AppTheme.navyDark)),
         const SizedBox(width: 10),
@@ -183,14 +184,17 @@ class EquipmentMarketplaceScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: SystemUiOverlayStyle.dark.copyWith(statusBarColor: Colors.transparent),
+      value: SystemUiOverlayStyle.dark.copyWith(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: Brightness.dark,
+      ),
       child: Scaffold(
         backgroundColor: const Color(0xFFFBFBFB),
-        extendBodyBehindAppBar: true, // Allows background to flow under status bar
+        extendBodyBehindAppBar: true,
         appBar: _buildMarketplaceAppBar(context),
         body: Column(
           children: [
-            const SizedBox(height: 100), // Account for transparent appbar height
+            const SizedBox(height: 100),
             _buildMarketplaceSearchHeader(),
             Expanded(child: _buildEquipmentGrid(context)),
           ],
@@ -276,7 +280,10 @@ class EquipmentDetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: SystemUiOverlayStyle.dark.copyWith(statusBarColor: Colors.transparent),
+      value: SystemUiOverlayStyle.dark.copyWith(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: Brightness.dark,
+      ),
       child: Scaffold(
         backgroundColor: Colors.white,
         extendBodyBehindAppBar: true,
