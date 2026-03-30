@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-// Centralized Role Definition
+// Centralized Role Definition - Updated to match MainScaffold
 enum UserRole { fisherman, buyer, seller, driver, storage, admin }
 
 class AppTheme {
@@ -9,14 +9,14 @@ class AppTheme {
   static const Color navyDark = Color(0xFF0D47A1);
   static const Color softBlueBg = Color(0xFFE6F2FF);
 
-  static Color? get paleAzure => null;
+  // Added a fallback for paleAzure if you use it in other UI parts
+  static const Color paleAzure = Color(0xFFB3E5FC);
 
   static ThemeData getTheme() {
     return ThemeData(
       useMaterial3: true,
       scaffoldBackgroundColor: softBlueBg,
       primaryColor: vibrantBlue,
-      // This applies Urbanist globally to avoid info warnings in other files
       fontFamily: GoogleFonts.urbanist().fontFamily,
       textTheme: GoogleFonts.urbanistTextTheme(),
       colorScheme: ColorScheme.fromSeed(

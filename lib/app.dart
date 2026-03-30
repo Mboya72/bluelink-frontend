@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'core/app_theme.dart';
-import 'features/onboarding/screens/onboarding_screen.dart' hide UserRole;
+import 'features/onboarding/screens/onboarding_screen.dart';
 
 class BluelinkApp extends StatelessWidget {
   const BluelinkApp({super.key});

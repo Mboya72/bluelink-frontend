@@ -64,7 +64,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
                   decoration: BoxDecoration(
-                      color: AppTheme.vibrantBlue.withOpacity(0.1),
+                      color: AppTheme.vibrantBlue.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(12)),
                   child: Text("Blue Link Ecosystem",
                       style: GoogleFonts.urbanist(
@@ -136,14 +136,14 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 250),
         decoration: BoxDecoration(
-          color: isSelected ? Colors.white : Colors.white.withOpacity(0.5),
+          color: isSelected ? Colors.white : Colors.white.withValues(alpha: 0.5),
           border: Border.all(
               color: isSelected ? AppTheme.vibrantBlue : Colors.transparent, width: 2.5),
           borderRadius: BorderRadius.circular(24),
           boxShadow: isSelected
               ? [
             BoxShadow(
-                color: AppTheme.vibrantBlue.withOpacity(0.1),
+                color: AppTheme.vibrantBlue.withValues(alpha: 0.1),
                 blurRadius: 10,
                 offset: const Offset(0, 4))
           ]
@@ -153,7 +153,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(_getRoleIcon(role),
-                color: isSelected ? AppTheme.vibrantBlue : AppTheme.navyDark.withOpacity(0.4),
+                color: isSelected ? AppTheme.vibrantBlue : AppTheme.navyDark.withValues(alpha: 0.4),
                 size: 32),
             const SizedBox(height: 10),
             Text(role.name[0].toUpperCase() + role.name.substring(1),
@@ -204,7 +204,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       const SizedBox(height: 90),
                       // 1. Remove double.infinity and use a Center + Constrained Container
                       Center(
-                        child: Container(
+                        child: SizedBox(
                           // Use 85% of screen width for a clean "inset" look
                           width: MediaQuery.of(context).size.width * 0.85,
                           height: isLogo

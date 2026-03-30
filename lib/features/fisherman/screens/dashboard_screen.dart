@@ -1,4 +1,6 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../core/app_theme.dart';
 
@@ -8,73 +10,102 @@ class FishermanDashboard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF8FBFF), // Soft azure background
+      backgroundColor: const Color(0xFFF8FBFF),
+      extendBodyBehindAppBar: true,
+      extendBody: true,
       appBar: _buildAppBar(),
-      // REMOVED bottomNavigationBar: Logic now lives in MainScaffold
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+        padding: const EdgeInsets.fromLTRB(20, 110, 20, 120),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildWeatherCard(),
-            const SizedBox(height: 25),
-            _buildSectionHeader("Quick Actions"),
-            const SizedBox(height: 15),
-            _buildQuickActionsGrid(),
-            const SizedBox(height: 30),
-            _buildSectionHeader("Active Sales"), // Updated label per your table
-            const SizedBox(height: 15),
-            _buildActiveListings(),
+            _buildBalanceCard(),
             const SizedBox(height: 20),
+            _buildSectionHeader("Quick Actions", showViewAll: false),
+            const SizedBox(height: 8),
+            _buildQuickActionsGrid(),
+            const SizedBox(height: 20),
+            _buildSectionHeader("Active Sales"),
+            const SizedBox(height: 8),
+            _buildHorizontalActiveSales(), // Horizontal style from image
+            const SizedBox(height: 20),
+            _buildSectionHeader("Recent Transactions"),
+            const SizedBox(height: 8),
+            _buildTransactionList(), // Vertical list from image
+            const SizedBox(height: 20),
+            _buildSectionHeader("In Transit"),
+            const SizedBox(height: 8),
+            _buildInTransitCard(),
           ],
         ),
       ),
     );
   }
 
-  // --- UI Components ---
-
+  // --- APP BAR (FROSTED GLASS) ---
   PreferredSizeWidget _buildAppBar() {
     return AppBar(
-      backgroundColor: Colors.transparent, // Blends better with the background
+      systemOverlayStyle: const SystemUiOverlayStyle(
+        statusBarIconBrightness: Brightness.dark,
+        statusBarBrightness: Brightness.light,
+      ),
+      backgroundColor: Colors.white.withValues(alpha: 0.1),
       elevation: 0,
+      scrolledUnderElevation: 0,
+      centerTitle: false,
+      flexibleSpace: ClipRect(
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+          child: Container(color: Colors.transparent),
+        ),
+      ),
+      leadingWidth: 64,
+      leading: Padding(
+        padding: const EdgeInsets.only(left: 20),
+        child: Center(
+          child: Container(
+            width: 40,
+            height: 40,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              border: Border.all(color: Colors.white, width: 2),
+              image: const DecorationImage(
+                image: NetworkImage('https://plus.unsplash.com/premium_photo-1705418263346-d46342de49ca?q=80&w=687&auto=format&fit=crop'),
+                fit: BoxFit.cover,
+                alignment: Alignment(0, -0.4),
+              ),
+            ),
+          ),
+        ),
+      ),
       title: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
         children: [
-          Text("Good Morning,",
-              style: GoogleFonts.urbanist(fontSize: 14, color: Colors.grey[600])),
-          Text("Captain Nemo",
-              style: GoogleFonts.urbanist(fontSize: 18, fontWeight: FontWeight.w900, color: AppTheme.navyDark)),
+          Text("Hello,", style: GoogleFonts.urbanist(fontSize: 12, color: Colors.grey[600])),
+          Text("Captain Nemo!", style: GoogleFonts.urbanist(fontSize: 18, fontWeight: FontWeight.w900, color: AppTheme.navyDark)),
         ],
       ),
       actions: [
-        IconButton(
-          onPressed: () {},
-          icon: const Icon(Icons.notifications_none_rounded, color: AppTheme.navyDark),
-        ),
+        IconButton(onPressed: () {}, icon: const Icon(Icons.search_rounded, color: AppTheme.navyDark)),
+        IconButton(onPressed: () {}, icon: const Icon(Icons.notifications_none_rounded, color: AppTheme.navyDark)),
         const SizedBox(width: 10),
       ],
     );
   }
 
-  Widget _buildWeatherCard() {
+  // --- BALANCE CARD (MODERN GRADIENT) ---
+  Widget _buildBalanceCard() {
     return Container(
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: [AppTheme.vibrantBlue, AppTheme.vibrantBlue.withOpacity(0.8)],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
+          colors: [AppTheme.vibrantBlue, AppTheme.vibrantBlue.withValues(alpha: 0.7)],
+          begin: Alignment.topLeft, end: Alignment.bottomRight,
         ),
-        borderRadius: BorderRadius.circular(24),
-        boxShadow: [
-          BoxShadow(
-            color: AppTheme.vibrantBlue.withOpacity(0.3),
-            blurRadius: 15,
-            offset: const Offset(0, 8),
-          )
-        ],
+        borderRadius: BorderRadius.circular(28),
+        boxShadow: [BoxShadow(color: AppTheme.vibrantBlue.withValues(alpha: 0.2), blurRadius: 15, offset: const Offset(0, 8))],
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -82,46 +113,36 @@ class FishermanDashboard extends StatelessWidget {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text("Calm Seas",
-                  style: GoogleFonts.urbanist(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
+              Text("Current Balance", style: GoogleFonts.urbanist(color: Colors.white70, fontSize: 14)),
               const SizedBox(height: 4),
-              Text("High Tide at 2:30 PM",
-                  style: GoogleFonts.urbanist(color: Colors.white70, fontSize: 13)),
+              Text("\$4,570.80", style: GoogleFonts.urbanist(color: Colors.white, fontSize: 30, fontWeight: FontWeight.w900)),
             ],
           ),
-          const Icon(Icons.wb_sunny_rounded, color: Colors.amber, size: 42),
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: const BoxDecoration(color: Colors.white24, shape: BoxShape.circle),
+            child: const Icon(Icons.add, color: Colors.white, size: 28),
+          ),
         ],
       ),
     );
   }
 
-  Widget _buildSectionHeader(String title) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(title,
-            style: GoogleFonts.urbanist(fontSize: 20, fontWeight: FontWeight.w800, color: AppTheme.navyDark)),
-        TextButton(
-            onPressed: () {},
-            child: Text("View all",
-                style: GoogleFonts.urbanist(color: AppTheme.vibrantBlue, fontWeight: FontWeight.w700))),
-      ],
-    );
-  }
-
+  // --- QUICK ACTIONS GRID ---
   Widget _buildQuickActionsGrid() {
     return GridView.count(
+      padding: EdgeInsets.zero,
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       crossAxisCount: 2,
-      crossAxisSpacing: 15,
-      mainAxisSpacing: 15,
-      childAspectRatio: 1.4,
+      crossAxisSpacing: 12,
+      mainAxisSpacing: 12,
+      childAspectRatio: 1.6,
       children: [
         _actionCard("Post Catch", Icons.add_circle_outline, AppTheme.vibrantBlue),
-        _actionCard("Earnings", Icons.payments_outlined, Colors.purple), // Per Table
+        _actionCard("Earnings", Icons.payments_outlined, Colors.purple),
         _actionCard("Inventory", Icons.inventory_2_outlined, Colors.teal),
-        _actionCard("Sea Logs", Icons.waves, Colors.orange), // Per Table (Weather/Tides)
+        _actionCard("Sea Logs", Icons.waves, Colors.orange),
       ],
     );
   }
@@ -131,62 +152,153 @@ class FishermanDashboard extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(20),
-        boxShadow: [
-          BoxShadow(color: Colors.black.withOpacity(0.04), blurRadius: 12, offset: const Offset(0, 4))
-        ],
+        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.03), blurRadius: 10)],
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Container(
             padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: color.withOpacity(0.1),
-              shape: BoxShape.circle,
-            ),
-            child: Icon(icon, color: color, size: 26),
+            decoration: BoxDecoration(color: color.withValues(alpha: 0.1), shape: BoxShape.circle),
+            child: Icon(icon, color: color, size: 22),
           ),
-          const SizedBox(height: 10),
-          Text(title, style: GoogleFonts.urbanist(fontWeight: FontWeight.w700, fontSize: 14)),
+          const SizedBox(height: 8),
+          Text(title, style: GoogleFonts.urbanist(fontWeight: FontWeight.w700, fontSize: 13)),
         ],
       ),
     );
   }
 
-  Widget _buildActiveListings() {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: [
-          BoxShadow(color: Colors.black.withOpacity(0.02), blurRadius: 10, offset: const Offset(0, 4))
+  // --- HORIZONTAL ACTIVE SALES (LIKE "UPCOMING PAYMENTS") ---
+  Widget _buildHorizontalActiveSales() {
+    return SizedBox(
+      height: 160,
+      child: ListView(
+        scrollDirection: Axis.horizontal,
+        physics: const BouncingScrollPhysics(),
+        children: [
+          _activeSaleCard("Yellowfin Tuna", "\$120", "2 days left", AppTheme.vibrantBlue, true),
+          _activeSaleCard("Red Snapper", "\$85", "5 hours left", Colors.white, false),
+          _activeSaleCard("King Prawns", "\$210", "1 day left", Colors.white, false),
         ],
       ),
+    );
+  }
+
+  Widget _activeSaleCard(String title, String price, String time, Color bg, bool isPrimary) {
+    return Container(
+      width: 150,
+      margin: const EdgeInsets.only(right: 15),
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: bg,
+        borderRadius: BorderRadius.circular(24),
+        border: isPrimary ? null : Border.all(color: Colors.grey.shade200),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Icon(Icons.waves, color: isPrimary ? Colors.white70 : AppTheme.vibrantBlue),
+          const Spacer(),
+          Text(title, style: GoogleFonts.urbanist(color: isPrimary ? Colors.white : AppTheme.navyDark, fontWeight: FontWeight.w800, fontSize: 15)),
+          Text(price, style: GoogleFonts.urbanist(color: isPrimary ? Colors.white : AppTheme.navyDark, fontWeight: FontWeight.w900, fontSize: 18)),
+          const SizedBox(height: 4),
+          Text(time, style: GoogleFonts.urbanist(color: isPrimary ? Colors.white60 : Colors.grey, fontSize: 12)),
+        ],
+      ),
+    );
+  }
+
+  // --- RECENT TRANSACTIONS (VERTICAL LIST) ---
+  Widget _buildTransactionList() {
+    return Container(
+      padding: const EdgeInsets.all(8),
+      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(24)),
+      child: Column(
+        children: [
+          _transactionItem("Local Market Sale", "21 Sep, 03:02 PM", "+\$230.50", true),
+          const Divider(height: 1, indent: 70, endIndent: 20, color: Color(0xFFF1F1F1)),
+          _transactionItem("Fuel Station", "21 Sep, 01:15 PM", "-\$85.00", false),
+          const Divider(height: 1, indent: 70, endIndent: 20, color: Color(0xFFF1F1F1)),
+          _transactionItem("Equipment Repair", "20 Sep, 11:45 AM", "-\$40.20", false),
+        ],
+      ),
+    );
+  }
+
+  Widget _transactionItem(String title, String date, String amount, bool isProfit) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
       child: Row(
         children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(12),
-            child: Image.network(
-                'https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?w=100&h=100&fit=crop',
-                width: 60, height: 60, fit: BoxFit.cover
-            ),
+          Container(
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(color: AppTheme.softBlueBg, borderRadius: BorderRadius.circular(12)),
+            child: Icon(isProfit ? Icons.arrow_downward : Icons.arrow_upward, color: AppTheme.navyDark, size: 20),
           ),
-          const SizedBox(width: 15),
+          const SizedBox(width: 12),
           Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text("Yellowfin Tuna", style: GoogleFonts.urbanist(fontWeight: FontWeight.w800, fontSize: 16)),
-                Text("12kg • Active Sale", style: GoogleFonts.urbanist(color: Colors.grey[600], fontSize: 13)),
-              ],
-            ),
+            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Text(title, style: GoogleFonts.urbanist(fontWeight: FontWeight.w800, fontSize: 14)),
+              Text(date, style: GoogleFonts.urbanist(color: Colors.grey, fontSize: 11)),
+            ]),
           ),
-          Text("\$120",
-              style: GoogleFonts.urbanist(fontWeight: FontWeight.w900, color: AppTheme.vibrantBlue, fontSize: 18)),
+          Text(amount, style: GoogleFonts.urbanist(fontWeight: FontWeight.w900, fontSize: 14, color: isProfit ? Colors.green : Colors.red[400])),
         ],
       ),
+    );
+  }
+
+  // --- IN TRANSIT CARD ---
+  Widget _buildInTransitCard() {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(24)),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(color: Colors.orange.withValues(alpha: 0.1), shape: BoxShape.circle),
+                child: const Icon(Icons.local_shipping_rounded, color: Colors.orange, size: 20),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                  Text("Order #8821", style: GoogleFonts.urbanist(fontWeight: FontWeight.w800, fontSize: 14)),
+                  Text("Red Snapper (5kg)", style: GoogleFonts.urbanist(color: Colors.grey[600], fontSize: 12)),
+                ]),
+              ),
+              Text("In 15 mins", style: GoogleFonts.urbanist(fontWeight: FontWeight.w700, color: AppTheme.vibrantBlue, fontSize: 12)),
+            ],
+          ),
+          const SizedBox(height: 12),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(3),
+            child: LinearProgressIndicator(value: 0.7, backgroundColor: Colors.grey[200], valueColor: AlwaysStoppedAnimation<Color>(AppTheme.vibrantBlue), minHeight: 6),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // --- HELPERS ---
+  Widget _buildSectionHeader(String title, {bool showViewAll = true}) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(title, style: GoogleFonts.urbanist(fontSize: 18, fontWeight: FontWeight.w800, color: AppTheme.navyDark)),
+        if (showViewAll)
+          SizedBox(
+            height: 30,
+            child: TextButton(
+              onPressed: () {},
+              style: TextButton.styleFrom(padding: EdgeInsets.zero, tapTargetSize: MaterialTapTargetSize.shrinkWrap),
+              child: Text("See all", style: GoogleFonts.urbanist(color: Colors.grey[500], fontSize: 13, fontWeight: FontWeight.w700)),
+            ),
+          ),
+      ],
     );
   }
 }
