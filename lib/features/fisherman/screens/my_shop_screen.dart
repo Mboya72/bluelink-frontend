@@ -26,29 +26,35 @@ class _MyShopScreenState extends State<MyShopScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFFF8FBFF),
-      extendBodyBehindAppBar: true,
-      appBar: _buildShopAppBar(),
-      body: SingleChildScrollView(
-        controller: _shopScrollController,
-        padding: const EdgeInsets.fromLTRB(20, 120, 20, 40),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildShopHeader(),
-            const SizedBox(height: 25),
-            _buildShopStats(),
-            const SizedBox(height: 30),
-            GestureDetector(
-              onTap: _openMarketplace,
-              child: _buildMarketplaceLinkCard(),
-            ),
-            const SizedBox(height: 35),
-            _buildSectionHeader("My Inventory", "Manage"),
-            const SizedBox(height: 15),
-            _buildInventoryGrid(),
-          ],
+    // This ensures the status bar icons are dark (black) for the Shop view
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: SystemUiOverlayStyle.dark.copyWith(
+        statusBarColor: Colors.transparent,
+      ),
+      child: Scaffold(
+        backgroundColor: const Color(0xFFF8FBFF),
+        extendBodyBehindAppBar: true,
+        appBar: _buildShopAppBar(),
+        body: SingleChildScrollView(
+          controller: _shopScrollController,
+          padding: const EdgeInsets.fromLTRB(20, 120, 20, 40),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildShopHeader(),
+              const SizedBox(height: 25),
+              _buildShopStats(),
+              const SizedBox(height: 30),
+              GestureDetector(
+                onTap: _openMarketplace,
+                child: _buildMarketplaceLinkCard(),
+              ),
+              const SizedBox(height: 35),
+              _buildSectionHeader("My Inventory", "Manage"),
+              const SizedBox(height: 15),
+              _buildInventoryGrid(),
+            ],
+          ),
         ),
       ),
     );
@@ -56,10 +62,13 @@ class _MyShopScreenState extends State<MyShopScreen> {
 
   PreferredSizeWidget _buildShopAppBar() {
     return AppBar(
+      systemOverlayStyle: SystemUiOverlayStyle.dark, // Darkens phone icons
       backgroundColor: Colors.transparent,
       elevation: 0,
+      scrolledUnderElevation: 0,
       centerTitle: true,
-      title: Text("My Shop", style: GoogleFonts.urbanist(fontWeight: FontWeight.w900, fontSize: 18, color: AppTheme.navyDark)),
+      title: Text("Shop",
+          style: GoogleFonts.urbanist(fontWeight: FontWeight.w900, fontSize: 24, color: AppTheme.navyDark)),
       actions: [
         IconButton(onPressed: () {}, icon: const Icon(Icons.share_outlined, color: AppTheme.navyDark)),
         const SizedBox(width: 10),
@@ -70,9 +79,19 @@ class _MyShopScreenState extends State<MyShopScreen> {
   Widget _buildShopHeader() {
     return Container(
       padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(28), boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.02), blurRadius: 20)]),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(28),
+        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.02), blurRadius: 20)],
+      ),
       child: Row(children: [
-        Container(width: 65, height: 65, decoration: BoxDecoration(borderRadius: BorderRadius.circular(20), image: const DecorationImage(image: NetworkImage('https://images.unsplash.com/photo-1551963831-b3b1ca40c98e?w=200'), fit: BoxFit.cover))),
+        Container(
+          width: 65, height: 65,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20),
+            image: const DecorationImage(image: NetworkImage('https://images.unsplash.com/photo-1551963831-b3b1ca40c98e?w=200'), fit: BoxFit.cover),
+          ),
+        ),
         const SizedBox(width: 15),
         Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Text("Nemo's Deep Sea", style: GoogleFonts.urbanist(fontWeight: FontWeight.w900, fontSize: 18, color: AppTheme.navyDark)),
@@ -105,7 +124,11 @@ class _MyShopScreenState extends State<MyShopScreen> {
   Widget _buildMarketplaceLinkCard() {
     return Container(
       padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(gradient: LinearGradient(colors: [AppTheme.vibrantBlue, AppTheme.navyDark]), borderRadius: BorderRadius.circular(24), boxShadow: [BoxShadow(color: AppTheme.vibrantBlue.withOpacity(0.3), blurRadius: 15, offset: const Offset(0, 8))]),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(colors: [AppTheme.vibrantBlue, AppTheme.navyDark]),
+        borderRadius: BorderRadius.circular(24),
+        boxShadow: [BoxShadow(color: AppTheme.vibrantBlue.withOpacity(0.3), blurRadius: 15, offset: const Offset(0, 8))],
+      ),
       child: Row(children: [
         const CircleAvatar(backgroundColor: Colors.white24, child: Icon(Icons.shopping_cart_outlined, color: Colors.white)),
         const SizedBox(width: 15),
@@ -151,7 +174,7 @@ class _MyShopScreenState extends State<MyShopScreen> {
 }
 
 // ---------------------------------------------------------------------------
-// VIEW 2: EQUIPMENT MARKETPLACE (NO NAV BAR)
+// VIEW 2: EQUIPMENT MARKETPLACE (TRANSPARENT TOP BAR, DARK ICONS)
 // ---------------------------------------------------------------------------
 
 class EquipmentMarketplaceScreen extends StatelessWidget {
@@ -159,24 +182,39 @@ class EquipmentMarketplaceScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFFFBFBFB),
-      appBar: _buildMarketplaceAppBar(context),
-      body: Column(
-        children: [
-          _buildMarketplaceSearchHeader(),
-          Expanded(child: _buildEquipmentGrid(context)),
-        ],
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: SystemUiOverlayStyle.dark.copyWith(statusBarColor: Colors.transparent),
+      child: Scaffold(
+        backgroundColor: const Color(0xFFFBFBFB),
+        extendBodyBehindAppBar: true, // Allows background to flow under status bar
+        appBar: _buildMarketplaceAppBar(context),
+        body: Column(
+          children: [
+            const SizedBox(height: 100), // Account for transparent appbar height
+            _buildMarketplaceSearchHeader(),
+            Expanded(child: _buildEquipmentGrid(context)),
+          ],
+        ),
       ),
     );
   }
 
   PreferredSizeWidget _buildMarketplaceAppBar(BuildContext context) {
     return AppBar(
-      backgroundColor: const Color(0xFFFBFBFB), elevation: 0, centerTitle: true,
-      leading: IconButton(icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.black, size: 16), onPressed: () => Navigator.pop(context)),
-      title: Text("Search tools", style: GoogleFonts.urbanist(color: Colors.black, fontWeight: FontWeight.w700, fontSize: 17)),
-      actions: [IconButton(onPressed: () {}, icon: const Icon(Icons.notifications_none_rounded, color: Colors.black))],
+      systemOverlayStyle: SystemUiOverlayStyle.dark,
+      backgroundColor: Colors.transparent,
+      elevation: 0,
+      scrolledUnderElevation: 0,
+      centerTitle: true,
+      leading: IconButton(
+        icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.black, size: 16),
+        onPressed: () => Navigator.pop(context),
+      ),
+      title: Text("Search tools",
+          style: GoogleFonts.urbanist(color: Colors.black, fontWeight: FontWeight.w700, fontSize: 17)),
+      actions: [
+        IconButton(onPressed: () {}, icon: const Icon(Icons.notifications_none_rounded, color: Colors.black)),
+      ],
     );
   }
 
@@ -228,7 +266,7 @@ class EquipmentMarketplaceScreen extends StatelessWidget {
 }
 
 // ---------------------------------------------------------------------------
-// VIEW 3: EQUIPMENT DETAIL (3RD PHONE IN REFERENCE)
+// VIEW 3: EQUIPMENT DETAIL (TRANSPARENT TOP BAR, DARK ICONS)
 // ---------------------------------------------------------------------------
 
 class EquipmentDetailScreen extends StatelessWidget {
@@ -237,61 +275,67 @@ class EquipmentDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: Colors.white, elevation: 0,
-        leading: IconButton(icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.black, size: 18), onPressed: () => Navigator.pop(context)),
-        actions: [IconButton(icon: const Icon(Icons.favorite_border_rounded, color: Colors.black), onPressed: () {})],
-      ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Large Product Image Area
-          Container(
-            height: 300, width: double.infinity,
-            margin: const EdgeInsets.all(20),
-            decoration: BoxDecoration(color: const Color(0xFFF6F5F0), borderRadius: BorderRadius.circular(30)),
-            child: const Center(child: Icon(Icons.handyman_rounded, size: 120, color: Colors.grey)),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 25),
-            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                Text(item['name']!, style: GoogleFonts.urbanist(fontSize: 28, fontWeight: FontWeight.w900)),
-                Text(item['price']!, style: GoogleFonts.urbanist(fontSize: 24, fontWeight: FontWeight.w900, color: AppTheme.vibrantBlue)),
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: SystemUiOverlayStyle.dark.copyWith(statusBarColor: Colors.transparent),
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        extendBodyBehindAppBar: true,
+        appBar: AppBar(
+          systemOverlayStyle: SystemUiOverlayStyle.dark,
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          scrolledUnderElevation: 0,
+          leading: IconButton(icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.black, size: 18), onPressed: () => Navigator.pop(context)),
+          actions: [IconButton(icon: const Icon(Icons.favorite_border_rounded, color: Colors.black), onPressed: () {})],
+        ),
+        body: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(height: 50),
+            Container(
+              height: 300, width: double.infinity,
+              margin: const EdgeInsets.all(20),
+              decoration: BoxDecoration(color: const Color(0xFFF6F5F0), borderRadius: BorderRadius.circular(30)),
+              child: const Center(child: Icon(Icons.handyman_rounded, size: 120, color: Colors.grey)),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 25),
+              child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                  Text(item['name']!, style: GoogleFonts.urbanist(fontSize: 28, fontWeight: FontWeight.w900)),
+                  Text(item['price']!, style: GoogleFonts.urbanist(fontSize: 24, fontWeight: FontWeight.w900, color: AppTheme.vibrantBlue)),
+                ]),
+                const SizedBox(height: 10),
+                Row(children: [
+                  const Icon(Icons.star, color: Colors.orange, size: 18),
+                  const SizedBox(width: 5),
+                  Text("${item['rating']} (120 Reviews)", style: GoogleFonts.urbanist(fontWeight: FontWeight.w600, color: Colors.grey)),
+                ]),
+                const SizedBox(height: 25),
+                Text("About", style: GoogleFonts.urbanist(fontSize: 18, fontWeight: FontWeight.w800)),
+                const SizedBox(height: 10),
+                Text(
+                  "This professional-grade ${item['name']} is designed for marine tasks. Features ergonomic grip and extreme durability.",
+                  style: GoogleFonts.urbanist(color: Colors.grey[600], height: 1.6),
+                ),
               ]),
-              const SizedBox(height: 10),
-              Row(children: [
-                const Icon(Icons.star, color: Colors.orange, size: 18),
-                const SizedBox(width: 5),
-                Text("${item['rating']} (120 Reviews)", style: GoogleFonts.urbanist(fontWeight: FontWeight.w600, color: Colors.grey)),
+            ),
+            const Spacer(),
+            Container(
+              padding: const EdgeInsets.all(25),
+              decoration: BoxDecoration(color: Colors.white, boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 20, offset: const Offset(0, -5))]),
+              child: Row(children: [
+                Container(padding: const EdgeInsets.all(15), decoration: BoxDecoration(color: const Color(0xFFF6F5F0), borderRadius: BorderRadius.circular(15)), child: const Icon(Icons.chat_bubble_outline_rounded)),
+                const SizedBox(width: 15),
+                Expanded(child: ElevatedButton(
+                  onPressed: () {},
+                  style: ElevatedButton.styleFrom(backgroundColor: Colors.black, padding: const EdgeInsets.symmetric(vertical: 18), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15))),
+                  child: Text("Book Now", style: GoogleFonts.urbanist(color: Colors.white, fontWeight: FontWeight.w800, fontSize: 16)),
+                )),
               ]),
-              const SizedBox(height: 25),
-              Text("About", style: GoogleFonts.urbanist(fontSize: 18, fontWeight: FontWeight.w800)),
-              const SizedBox(height: 10),
-              Text(
-                "This professional-grade ${item['name']} is designed for high-performance marine tasks. Features ergonomic grip and extreme durability in saltwater environments.",
-                style: GoogleFonts.urbanist(color: Colors.grey[600], height: 1.6),
-              ),
-            ]),
-          ),
-          const Spacer(),
-          // Bottom "Book Now" Button
-          Container(
-            padding: const EdgeInsets.all(25),
-            decoration: BoxDecoration(color: Colors.white, boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 20, offset: const Offset(0, -5))]),
-            child: Row(children: [
-              Container(padding: const EdgeInsets.all(15), decoration: BoxDecoration(color: const Color(0xFFF6F5F0), borderRadius: BorderRadius.circular(15)), child: const Icon(Icons.chat_bubble_outline_rounded)),
-              const SizedBox(width: 15),
-              Expanded(child: ElevatedButton(
-                onPressed: () {},
-                style: ElevatedButton.styleFrom(backgroundColor: Colors.black, padding: const EdgeInsets.symmetric(vertical: 18), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15))),
-                child: Text("Book Now", style: GoogleFonts.urbanist(color: Colors.white, fontWeight: FontWeight.w800, fontSize: 16)),
-              )),
-            ]),
-          ),
-        ],
+            ),
+          ],
+        ),
       ),
     );
   }
