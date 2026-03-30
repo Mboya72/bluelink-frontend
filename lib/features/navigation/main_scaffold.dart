@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../core/app_theme.dart';
-import '../fisherman/screens/dashboard_screen.dart'; // UserRole is imported from here
+import '../fisherman/screens/dashboard_screen.dart';
+import '../fisherman/screens/my_shop_screen.dart'; // UserRole is imported from here
 
 // --- MODELS ---
 
@@ -72,7 +73,7 @@ class _MainScaffoldState extends State<MainScaffold> {
           ],
           screens: const [
             FishermanDashboard(),
-            Center(child: Text("Post Catch / Manage")),
+            MyShopScreen(),
             Center(child: Text("Book Logistics")),
             Center(child: Text("Chat")),
             Center(child: Text("Boat Info / Licenses")),
