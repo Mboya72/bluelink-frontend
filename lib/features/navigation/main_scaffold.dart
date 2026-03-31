@@ -10,8 +10,11 @@ import '../fisherman/screens/logistics_screen.dart';
 import '../fisherman/screens/messages_screen.dart';
 import '../fisherman/screens/my_shop_screen.dart';
 import '../fisherman/screens/profile_screen.dart';
+import '../seller/screens/analytics_screen.dart';
 import '../seller/screens/inventory_screen.dart';
+import '../seller/screens/messages_screen.dart';
 import '../seller/screens/seller_logistics_screen.dart';
+import '../seller/screens/store_screen.dart';
 
 // --- MODELS ---
 
@@ -120,9 +123,9 @@ class _MainScaffoldState extends State<MainScaffold> {
           screens: const [
             InventoryDashboardScreen(),
             SellerLogisticsScreen(),
-            Center(child: Text("Sales Trends")),
-            Center(child: Text("Chat")),
-            Center(child: Text("Store Settings")),
+            SellerAnalyticsScreen(),
+            SellerMessagesScreen(),
+            SellerStoreScreen(),
           ],
         );
 

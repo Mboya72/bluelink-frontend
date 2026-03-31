@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../../../core/app_theme.dart';
 
 class ChatDetailScreen extends StatefulWidget {
   final String name;
   final String role;
+  final String url;
 
-  const ChatDetailScreen({super.key, required this.name, required this.role});
+  const ChatDetailScreen({
+    super.key,
+    required this.name,
+    required this.role,
+    required this.url,
+  });
 
   @override
   State<ChatDetailScreen> createState() => _ChatDetailScreenState();
@@ -15,7 +20,6 @@ class ChatDetailScreen extends StatefulWidget {
 class _ChatDetailScreenState extends State<ChatDetailScreen> {
   final TextEditingController _messageController = TextEditingController();
 
-  // Quick reply options for logistics drivers
   final List<String> quickReplies = [
     "I've arrived at the station",
     "Stuck in traffic (10 mins)",
@@ -45,27 +49,27 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
       backgroundColor: Colors.white,
       elevation: 0,
       leading: IconButton(
-        icon: const Icon(Icons.arrow_back_ios_new_rounded, color: AppTheme.navyDark, size: 20),
+        icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Color(0xFF1A237E), size: 20),
         onPressed: () => Navigator.pop(context),
       ),
       title: Row(
         children: [
-          const CircleAvatar(
+          CircleAvatar(
             radius: 18,
-            backgroundImage: NetworkImage("https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400"),
+            backgroundImage: NetworkImage(widget.url),
           ),
           const SizedBox(width: 12),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(widget.name, style: GoogleFonts.urbanist(fontSize: 16, fontWeight: FontWeight.w800, color: AppTheme.navyDark)),
-              Text(widget.role, style: GoogleFonts.urbanist(fontSize: 12, fontWeight: FontWeight.w600, color: AppTheme.vibrantBlue)),
+              Text(widget.name, style: GoogleFonts.urbanist(fontSize: 16, fontWeight: FontWeight.w800, color: const Color(0xFF1A237E))),
+              Text(widget.role, style: GoogleFonts.urbanist(fontSize: 12, fontWeight: FontWeight.w600, color: Colors.blue)),
             ],
           ),
         ],
       ),
       actions: [
-        IconButton(onPressed: () {}, icon: const Icon(Icons.phone_in_talk_rounded, color: AppTheme.navyDark)),
+        IconButton(onPressed: () {}, icon: const Icon(Icons.phone_in_talk_rounded, color: Color(0xFF1A237E))),
       ],
     );
   }
@@ -74,13 +78,13 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-      color: AppTheme.vibrantBlue.withValues(alpha: 0.05),
+      color: Colors.blue.withValues(alpha: 0.05),
       child: Row(
         children: [
-          const Icon(Icons.local_shipping_outlined, size: 16, color: AppTheme.vibrantBlue),
+          const Icon(Icons.local_shipping_outlined, size: 16, color: Colors.blue),
           const SizedBox(width: 10),
           Text("Relates to Trip #8842 - Station A",
-              style: GoogleFonts.urbanist(fontSize: 12, fontWeight: FontWeight.w700, color: AppTheme.navyDark)),
+              style: GoogleFonts.urbanist(fontSize: 12, fontWeight: FontWeight.w700, color: const Color(0xFF1A237E))),
         ],
       ),
     );
@@ -105,7 +109,7 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
         constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.75),
         padding: const EdgeInsets.all(15),
         decoration: BoxDecoration(
-          color: isMe ? AppTheme.navyDark : Colors.white,
+          color: isMe ? const Color(0xFF1A237E) : Colors.white,
           borderRadius: BorderRadius.only(
             topLeft: const Radius.circular(20),
             topRight: const Radius.circular(20),
@@ -119,7 +123,7 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
           children: [
             Text(message,
                 style: GoogleFonts.urbanist(
-                    color: isMe ? Colors.white : AppTheme.navyDark,
+                    color: isMe ? Colors.white : const Color(0xFF1A237E),
                     fontWeight: FontWeight.w600,
                     fontSize: 14
                 )),
@@ -155,11 +159,11 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(30),
-                border: Border.all(color: AppTheme.vibrantBlue.withValues(alpha: 0.2)),
+                border: Border.all(color: Colors.blue.withValues(alpha: 0.2)),
               ),
               child: Center(
                 child: Text(quickReplies[index],
-                    style: GoogleFonts.urbanist(fontSize: 12, fontWeight: FontWeight.w800, color: AppTheme.vibrantBlue)),
+                    style: GoogleFonts.urbanist(fontSize: 12, fontWeight: FontWeight.w800, color: Colors.blue)),
               ),
             ),
           );
@@ -174,7 +178,7 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
       decoration: const BoxDecoration(color: Colors.white),
       child: Row(
         children: [
-          _roundAction(Icons.location_on_outlined, AppTheme.vibrantBlue.withValues(alpha: 0.1)),
+          _roundAction(Icons.location_on_outlined, Colors.blue.withValues(alpha: 0.1)),
           const SizedBox(width: 12),
           Expanded(
             child: Container(
@@ -191,7 +195,7 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
             onTap: () {},
             child: Container(
               padding: const EdgeInsets.all(12),
-              decoration: const BoxDecoration(color: AppTheme.navyDark, shape: BoxShape.circle),
+              decoration: const BoxDecoration(color: Color(0xFF1A237E), shape: BoxShape.circle),
               child: const Icon(Icons.send_rounded, color: Colors.white, size: 20),
             ),
           ),
@@ -204,7 +208,7 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
     return Container(
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(color: bg, shape: BoxShape.circle),
-      child: Icon(icon, color: AppTheme.vibrantBlue, size: 20),
+      child: Icon(icon, color: Colors.blue, size: 20),
     );
   }
 }

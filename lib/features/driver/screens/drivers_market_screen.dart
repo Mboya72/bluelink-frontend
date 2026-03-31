@@ -1,4 +1,3 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -77,8 +76,8 @@ class _DriversMarketScreenState extends State<DriversMarketScreen> {
             decoration: BoxDecoration(
               color: AppTheme.navyDark,
               borderRadius: BorderRadius.circular(25),
-              image: DecorationImage(
-                image: const NetworkImage("https://www.transparenttextures.com/patterns/carbon-fibre.png"),
+              image: const DecorationImage(
+                image: NetworkImage("https://www.transparenttextures.com/patterns/carbon-fibre.png"),
                 opacity: 0.1,
                 repeat: ImageRepeat.repeat,
               ),
@@ -241,7 +240,7 @@ class _DriversMarketScreenState extends State<DriversMarketScreen> {
         children: [
           Container(
             padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(color: AppTheme.vibrantBlue.withOpacity(0.1), shape: BoxShape.circle),
+            decoration: BoxDecoration(color: AppTheme.vibrantBlue.withValues(alpha: 0.1), shape: BoxShape.circle),
             child: Icon(icon, color: AppTheme.vibrantBlue),
           ),
           const SizedBox(width: 15),

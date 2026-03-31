@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../core/app_theme.dart';
-import 'chat_detail_screen.dart'; // Ensure this import is correct
+import 'chat_detail_screen.dart';
 
 class MessageScreen extends StatefulWidget {
   const MessageScreen({super.key});
@@ -73,12 +73,18 @@ class _MessageScreenState extends State<MessageScreen> {
     String? image,
     bool isSupport = false,
   }) {
+    final String imageUrl = image ?? "https://ui-avatars.com/api/?name=${Uri.encodeComponent(name)}&background=random";
+
     return GestureDetector(
       onTap: () {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => ChatDetailScreen(name: name, role: role),
+            builder: (context) => ChatDetailScreen(
+              name: name,
+              role: role,
+              url: imageUrl,
+            ),
           ),
         );
       },
