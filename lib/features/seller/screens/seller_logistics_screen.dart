@@ -135,6 +135,7 @@ class _SellerLogisticsScreenState extends State<SellerLogisticsScreen> with Sing
               ],
             ),
             const SizedBox(height: 20),
+            // Mock content for details
             _detailRow(Icons.thermostat, "Sensor Status", "Live - 4.2°C"),
             _detailRow(Icons.battery_charging_full, "Tracker Battery", "88%"),
             const Spacer(),

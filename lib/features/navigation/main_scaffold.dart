@@ -119,7 +119,7 @@ class _MainScaffoldState extends State<MainScaffold> {
           ],
           screens: const [
             InventoryDashboardScreen(),
-            LogisticsScreen(),
+            SellerLogisticsScreen(),
             Center(child: Text("Sales Trends")),
             Center(child: Text("Chat")),
             Center(child: Text("Store Settings")),
