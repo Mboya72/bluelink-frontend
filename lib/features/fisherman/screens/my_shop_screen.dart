@@ -1,4 +1,3 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -83,7 +82,7 @@ class _MyShopScreenState extends State<MyShopScreen> {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(28),
-        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.02), blurRadius: 20)],
+        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.02), blurRadius: 20)],
       ),
       child: Row(children: [
         Container(
@@ -128,7 +127,7 @@ class _MyShopScreenState extends State<MyShopScreen> {
       decoration: BoxDecoration(
         gradient: LinearGradient(colors: [AppTheme.vibrantBlue, AppTheme.navyDark]),
         borderRadius: BorderRadius.circular(24),
-        boxShadow: [BoxShadow(color: AppTheme.vibrantBlue.withOpacity(0.3), blurRadius: 15, offset: const Offset(0, 8))],
+        boxShadow: [BoxShadow(color: AppTheme.vibrantBlue.withValues(alpha: 0.3), blurRadius: 15, offset: const Offset(0, 8))],
       ),
       child: Row(children: [
         const CircleAvatar(backgroundColor: Colors.white24, child: Icon(Icons.shopping_cart_outlined, color: Colors.white)),
@@ -227,7 +226,7 @@ class EquipmentMarketplaceScreen extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       child: Column(children: [
         Row(children: [
-          Expanded(child: Container(height: 55, padding: const EdgeInsets.symmetric(horizontal: 20), decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(30), boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.03), blurRadius: 15)]), child: Row(children: [const Icon(Icons.search, color: Colors.grey, size: 20), const SizedBox(width: 12), Text("Search", style: GoogleFonts.urbanist(color: Colors.grey))]))),
+          Expanded(child: Container(height: 55, padding: const EdgeInsets.symmetric(horizontal: 20), decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(30), boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.03), blurRadius: 15)]), child: Row(children: [const Icon(Icons.search, color: Colors.grey, size: 20), const SizedBox(width: 12), Text("Search", style: GoogleFonts.urbanist(color: Colors.grey))]))),
           const SizedBox(width: 12),
           Container(height: 55, width: 55, decoration: BoxDecoration(color: Colors.white, shape: BoxShape.circle, border: Border.all(color: Colors.grey.shade100)), child: const Icon(Icons.tune_rounded, color: Colors.black)),
         ]),
@@ -330,7 +329,7 @@ class EquipmentDetailScreen extends StatelessWidget {
             const Spacer(),
             Container(
               padding: const EdgeInsets.all(25),
-              decoration: BoxDecoration(color: Colors.white, boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 20, offset: const Offset(0, -5))]),
+              decoration: BoxDecoration(color: Colors.white, boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 20, offset: const Offset(0, -5))]),
               child: Row(children: [
                 Container(padding: const EdgeInsets.all(15), decoration: BoxDecoration(color: const Color(0xFFF6F5F0), borderRadius: BorderRadius.circular(15)), child: const Icon(Icons.chat_bubble_outline_rounded)),
                 const SizedBox(width: 15),

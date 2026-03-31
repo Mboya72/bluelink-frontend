@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import '../../core/app_theme.dart';
 import '../driver/screens/active_trip_screen.dart';
+import '../driver/screens/drivers_market_screen.dart';
 import '../driver/screens/job_board_screen.dart';
+import '../driver/screens/messages_screen.dart';
+import '../driver/screens/profile_screen.dart';
 import '../fisherman/screens/dashboard_screen.dart';
 import '../fisherman/screens/logistics_screen.dart';
 import '../fisherman/screens/messages_screen.dart';
@@ -133,9 +136,9 @@ class _MainScaffoldState extends State<MainScaffold> {
           screens: const [
             DriversDashboardScreen(),
             ActiveTripScreen(),
-            Center(child: Text("Browse Equipment")),
-            Center(child: Text("Chat")),
-            Center(child: Text("Vehicle Specs")),
+            DriversMarketScreen(),
+            MessageScreen(),
+            ProfileScreen(),
           ],
         );
 
