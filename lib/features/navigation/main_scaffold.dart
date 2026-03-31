@@ -1,3 +1,4 @@
+import 'package:bluelink_frontend/features/driver/screens/drivers_dashboard_screen.dart' hide DriversDashboardScreen;
 import 'package:flutter/material.dart';
 import '../../core/app_theme.dart';
 import '../driver/screens/job_board_screen.dart';
@@ -130,7 +131,7 @@ class _MainScaffoldState extends State<MainScaffold> {
             NavItem(icon: Icons.person_outline, label: "Profile"),
           ],
           screens: const [
-            DriverJobBoardScreen(),
+            DriversDashboardScreen(),
             Center(child: Text("Maps")),
             Center(child: Text("Browse Equipment")),
             Center(child: Text("Chat")),
