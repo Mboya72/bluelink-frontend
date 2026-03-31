@@ -9,7 +9,9 @@ import '../fisherman/screens/dashboard_screen.dart';
 import '../fisherman/screens/logistics_screen.dart';
 import '../fisherman/screens/messages_screen.dart';
 import '../fisherman/screens/my_shop_screen.dart';
-import '../fisherman/screens/profile_screen.dart'; // UserRole is imported from here
+import '../fisherman/screens/profile_screen.dart';
+import '../seller/screens/inventory_screen.dart';
+import '../seller/screens/seller_logistics_screen.dart';
 
 // --- MODELS ---
 
@@ -116,8 +118,8 @@ class _MainScaffoldState extends State<MainScaffold> {
             NavItem(icon: Icons.storefront_rounded, label: "Store"),
           ],
           screens: const [
-            Center(child: Text("Manage Stock")),
-            Center(child: Text("Shipments")),
+            InventoryDashboardScreen(),
+            LogisticsScreen(),
             Center(child: Text("Sales Trends")),
             Center(child: Text("Chat")),
             Center(child: Text("Store Settings")),

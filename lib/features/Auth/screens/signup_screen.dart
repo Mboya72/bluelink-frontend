@@ -229,9 +229,32 @@ class _SignUpScreenState extends State<SignUpScreen> {
       width: double.infinity,
       height: 60,
       child: OutlinedButton.icon(
-        onPressed: () {},
-        icon: Image.network('https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg', height: 24, errorBuilder: (c, e, s) => const Icon(Icons.g_mobiledata, size: 30)),
-        label: Text("Sign up with Google", style: GoogleFonts.urbanist(fontWeight: FontWeight.w700, color: AppTheme.navyDark)),
+        onPressed: () {
+          // TEMPORARY BYPASS: Navigate directly to user screens
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text("Bypassing Auth for Demo..."),
+              duration: Duration(milliseconds: 800),
+            ),
+          );
+
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+              builder: (context) => MainScaffold(role: widget.selectedRole),
+            ),
+                (route) => false,
+          );
+        },
+        icon: Image.network(
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Google_%22G%22_logo.svg/1200px-Google_%22G%22_logo.svg.png',
+          height: 24,
+          errorBuilder: (c, e, s) => const Icon(Icons.g_mobiledata, size: 30, color: Colors.red),
+        ),
+        label: Text(
+          "Sign up with Google",
+          style: GoogleFonts.urbanist(fontWeight: FontWeight.w700, color: AppTheme.navyDark),
+        ),
         style: OutlinedButton.styleFrom(
           side: BorderSide(color: Colors.grey[200]!),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),

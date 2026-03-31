@@ -18,7 +18,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   final List<Map<String, String>> _pages = const [
     {
-      'image': 'assets/images/logo.png',
+      'image': 'assets/images/logop1.png',
       'title': 'Welcome to Blue Link',
       'subtitle': 'The digital home for the blue economy. Connecting boats to businesses.',
     },
