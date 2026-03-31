@@ -1,4 +1,3 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -19,6 +18,12 @@ class _LogisticsScreenState extends State<LogisticsScreen> with SingleTickerProv
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
   }
 
   void _openLiveTracking(String id, Color themeColor) {
@@ -85,7 +90,7 @@ class _LogisticsScreenState extends State<LogisticsScreen> with SingleTickerProv
       decoration: BoxDecoration(
         color: AppTheme.navyDark,
         borderRadius: BorderRadius.circular(30),
-        boxShadow: [BoxShadow(color: AppTheme.navyDark.withOpacity(0.2), blurRadius: 20, offset: const Offset(0, 10))],
+        boxShadow: [BoxShadow(color: AppTheme.navyDark.withValues(alpha: 0.2), blurRadius: 20, offset: const Offset(0, 10))],
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -100,7 +105,7 @@ class _LogisticsScreenState extends State<LogisticsScreen> with SingleTickerProv
           ),
           Container(
             padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(color: Colors.white.withOpacity(0.1), borderRadius: BorderRadius.circular(18)),
+            decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(18)),
             child: const Icon(Icons.local_shipping_rounded, color: Colors.white, size: 30),
           )
         ],
@@ -119,7 +124,7 @@ class _LogisticsScreenState extends State<LogisticsScreen> with SingleTickerProv
         indicator: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(12),
-            boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 5)]
+            boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 5)]
         ),
         labelColor: AppTheme.navyDark,
         unselectedLabelColor: Colors.grey,
@@ -175,7 +180,7 @@ class _LogisticsScreenState extends State<LogisticsScreen> with SingleTickerProv
           color: Colors.white,
           borderRadius: BorderRadius.circular(28),
           border: Border.all(color: Colors.grey.shade100),
-          boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.02), blurRadius: 10)],
+          boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.02), blurRadius: 10)],
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -186,7 +191,7 @@ class _LogisticsScreenState extends State<LogisticsScreen> with SingleTickerProv
                 Text(id, style: GoogleFonts.urbanist(fontWeight: FontWeight.w800, color: Colors.grey, fontSize: 13)),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                  decoration: BoxDecoration(color: color.withOpacity(0.1), borderRadius: BorderRadius.circular(20)),
+                  decoration: BoxDecoration(color: color.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(20)),
                   child: Text(status, style: GoogleFonts.urbanist(color: color, fontWeight: FontWeight.w800, fontSize: 11)),
                 )
               ],
@@ -308,7 +313,7 @@ class _LiveTrackingMapScreenState extends State<LiveTrackingMapScreen> {
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(20),
-                  boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 10)],
+                  boxShadow: const [BoxShadow(color: Colors.black12, blurRadius: 10)],
                 ),
                 child: Row(
                   children: [
@@ -329,7 +334,7 @@ class _LiveTrackingMapScreenState extends State<LiveTrackingMapScreen> {
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(35),
-                  boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 25, offset: const Offset(0, -5))],
+                  boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.1), blurRadius: 25, offset: const Offset(0, -5))],
                 ),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,

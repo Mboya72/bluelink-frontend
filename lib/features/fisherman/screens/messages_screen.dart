@@ -87,7 +87,7 @@ class _FisherMessagesScreenState extends State<FisherMessagesScreen> {
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(20),
-          boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.03), blurRadius: 15)],
+          boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.03), blurRadius: 15)],
         ),
         child: Row(
           children: [
@@ -134,7 +134,7 @@ class _FisherMessagesScreenState extends State<FisherMessagesScreen> {
           children: [
             Container(
               padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(color: color.withOpacity(0.1), borderRadius: BorderRadius.circular(18)),
+              decoration: BoxDecoration(color: color.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(18)),
               child: Icon(Icons.waves, color: color, size: 28),
             ),
             const SizedBox(width: 15),
@@ -161,7 +161,7 @@ class _FisherMessagesScreenState extends State<FisherMessagesScreen> {
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                     decoration: BoxDecoration(
-                      color: color.withOpacity(0.1),
+                      color: color.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(6),
                     ),
                     child: Text(contextLabel,
