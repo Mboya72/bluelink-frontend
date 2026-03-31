@@ -1,6 +1,6 @@
-import 'package:bluelink_frontend/features/driver/screens/drivers_dashboard_screen.dart' hide DriversDashboardScreen;
 import 'package:flutter/material.dart';
 import '../../core/app_theme.dart';
+import '../driver/screens/active_trip_screen.dart';
 import '../driver/screens/job_board_screen.dart';
 import '../fisherman/screens/dashboard_screen.dart';
 import '../fisherman/screens/logistics_screen.dart';
@@ -132,7 +132,7 @@ class _MainScaffoldState extends State<MainScaffold> {
           ],
           screens: const [
             DriversDashboardScreen(),
-            Center(child: Text("Maps")),
+            ActiveTripScreen(),
             Center(child: Text("Browse Equipment")),
             Center(child: Text("Chat")),
             Center(child: Text("Vehicle Specs")),

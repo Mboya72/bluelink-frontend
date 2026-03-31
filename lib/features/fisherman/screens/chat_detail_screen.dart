@@ -1,4 +1,3 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -80,7 +79,7 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
         children: [
           CircleAvatar(
             radius: 20,
-            backgroundColor: widget.themeColor.withOpacity(0.1),
+            backgroundColor: widget.themeColor.withValues(alpha: 0.1),
             child: Icon(Icons.person, color: widget.themeColor, size: 22),
           ),
           const SizedBox(width: 12),
@@ -110,8 +109,8 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
   Widget _buildHeaderAction(IconData icon, VoidCallback onTap) {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 4),
-      decoration: BoxDecoration(
-        color: const Color(0xFFF6F5F0), // Soft secondary background
+      decoration: const BoxDecoration(
+        color: Color(0xFFF6F5F0), // Soft secondary background
         shape: BoxShape.circle,
       ),
       child: IconButton(
@@ -126,8 +125,8 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
       width: double.infinity,
       padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 20),
       decoration: BoxDecoration(
-        color: widget.themeColor.withOpacity(0.08),
-        border: Border(bottom: BorderSide(color: widget.themeColor.withOpacity(0.1))),
+        color: widget.themeColor.withValues(alpha: 0.08),
+        border: Border(bottom: BorderSide(color: widget.themeColor.withValues(alpha: 0.1))),
       ),
       child: Text(
         "Context: ${widget.contextLabel} #TRK-8821",
@@ -152,7 +151,7 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
             bottomLeft: Radius.circular(isMe ? 20 : 4),
             bottomRight: Radius.circular(isMe ? 4 : 20),
           ),
-          boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.03), blurRadius: 8)],
+          boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.03), blurRadius: 8)],
         ),
         child: Text(
           text,
@@ -177,7 +176,7 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
           color: Colors.white,
           borderRadius: BorderRadius.circular(22),
           border: Border.all(color: Colors.grey.shade100),
-          boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.02), blurRadius: 10)],
+          boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.02), blurRadius: 10)],
         ),
         child: Column(
           children: [
@@ -211,7 +210,7 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
       padding: EdgeInsets.fromLTRB(15, 10, 15, MediaQuery.of(context).padding.bottom + 15),
       decoration: BoxDecoration(
         color: Colors.white,
-        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.04), blurRadius: 15, offset: const Offset(0, -5))],
+        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.04), blurRadius: 15, offset: const Offset(0, -5))],
       ),
       child: Row(
         children: [
