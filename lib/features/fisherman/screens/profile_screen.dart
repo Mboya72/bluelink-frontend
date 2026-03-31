@@ -15,6 +15,7 @@ class FisherProfileScreen extends StatelessWidget {
       child: Scaffold(
         backgroundColor: const Color(0xFFFBFDFF),
         body: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
           child: Column(
             children: [
               _buildPremiumHeader(context),
@@ -24,6 +25,9 @@ class FisherProfileScreen extends StatelessWidget {
               ),
               _buildSectionHeader("Vessel & Operations"),
               _buildVesselCard(),
+              const SizedBox(height: 25),
+              _buildSectionHeader("Service Plans"),
+              _buildPricingSection(),
               const SizedBox(height: 25),
               _buildSectionHeader("Account Management"),
               _buildProfessionalMenu(),
@@ -39,66 +43,63 @@ class FisherProfileScreen extends StatelessWidget {
 
   Widget _buildPremiumHeader(BuildContext context) {
     return Container(
-      height: 300,
       width: double.infinity,
       decoration: const BoxDecoration(
         color: AppTheme.navyDark,
         borderRadius: BorderRadius.vertical(bottom: Radius.circular(40)),
       ),
-      child: Stack(
-        children: [
-          // Subtle Watermark/Pattern background could go here
-          SafeArea(
-            child: Column(
+      child: SafeArea(
+        bottom: false,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white, size: 20),
+                    onPressed: () => Navigator.pop(context),
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.settings_outlined, color: Colors.white, size: 22),
+                    onPressed: () {},
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 10),
+            _buildProfileAvatar(),
+            const SizedBox(height: 15),
+            Text(
+              "Capt. Elias Mwana",
+              style: GoogleFonts.urbanist(
+                color: Colors.white,
+                fontWeight: FontWeight.w900,
+                fontSize: 24,
+                letterSpacing: 0.5,
+              ),
+            ),
+            const SizedBox(height: 4),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 15),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      IconButton(
-                        icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white, size: 20),
-                        onPressed: () => Navigator.pop(context),
-                      ),
-                      IconButton(
-                        icon: const Icon(Icons.settings_outlined, color: Colors.white, size: 22),
-                        onPressed: () {},
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 10),
-                _buildProfileAvatar(),
-                const SizedBox(height: 15),
+                const Icon(Icons.location_on_rounded, color: Colors.white60, size: 14),
+                const SizedBox(width: 4),
                 Text(
-                  "Capt. Elias Mwana",
+                  "Mombasa Deep Sea Sector",
                   style: GoogleFonts.urbanist(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w900,
-                    fontSize: 24,
-                    letterSpacing: 0.5,
+                    color: Colors.white70,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 13,
                   ),
-                ),
-                const SizedBox(height: 4),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Icon(Icons.location_on_rounded, color: Colors.white60, size: 14),
-                    const SizedBox(width: 4),
-                    Text(
-                      "Mombasa Deep Sea Sector",
-                      style: GoogleFonts.urbanist(
-                        color: Colors.white70,
-                        fontWeight: FontWeight.w600,
-                        fontSize: 13,
-                      ),
-                    ),
-                  ],
                 ),
               ],
             ),
-          ),
-        ],
+            const SizedBox(height: 70), // Safe space for overlapping card
+          ],
+        ),
       ),
     );
   }
@@ -110,7 +111,7 @@ class FisherProfileScreen extends StatelessWidget {
           padding: const EdgeInsets.all(4),
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            border: Border.all(color: Colors.white.withOpacity(0.2), width: 1),
+            border: Border.all(color: Colors.white.withValues(alpha: 0.2), width: 1),
           ),
           child: const CircleAvatar(
             radius: 50,
@@ -140,7 +141,7 @@ class FisherProfileScreen extends StatelessWidget {
         borderRadius: BorderRadius.circular(28),
         boxShadow: [
           BoxShadow(
-            color: AppTheme.navyDark.withOpacity(0.08),
+            color: AppTheme.navyDark.withValues(alpha: 0.08),
             blurRadius: 30,
             offset: const Offset(0, 15),
           )
@@ -220,6 +221,46 @@ class FisherProfileScreen extends StatelessWidget {
     );
   }
 
+  Widget _buildPricingSection() {
+    return SizedBox(
+      height: 165,
+      child: ListView(
+        scrollDirection: Axis.horizontal,
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        physics: const BouncingScrollPhysics(),
+        children: [
+          _pricingCard("Standard", "Free", "5% commission per sale. Local port access.", Icons.anchor_rounded, Colors.blueGrey),
+          _pricingCard("Pro Fleet", "\$29/mo", "2% commission. Priority docking & fuel.", Icons.bolt_rounded, AppTheme.vibrantBlue),
+          _pricingCard("Enterprise", "Custom", "Volume logistics. Fleet management tools.", Icons.business_rounded, AppTheme.navyDark),
+        ],
+      ),
+    );
+  }
+
+  Widget _pricingCard(String title, String price, String subtitle, IconData icon, Color color) {
+    return Container(
+      width: 160,
+      margin: const EdgeInsets.only(right: 15, bottom: 5),
+      padding: const EdgeInsets.all(18),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(26),
+        border: Border.all(color: color.withValues(alpha: 0.1), width: 1.5),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Icon(icon, color: color, size: 22),
+          const Spacer(),
+          Text(title, style: GoogleFonts.urbanist(fontWeight: FontWeight.w800, fontSize: 14, color: AppTheme.navyDark)),
+          Text(price, style: GoogleFonts.urbanist(fontWeight: FontWeight.w900, fontSize: 18, color: color)),
+          const SizedBox(height: 4),
+          Text(subtitle, style: GoogleFonts.urbanist(color: Colors.grey, fontSize: 10, fontWeight: FontWeight.w600, height: 1.2), maxLines: 2),
+        ],
+      ),
+    );
+  }
+
   Widget _buildProfessionalMenu() {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 20),
@@ -267,6 +308,7 @@ class FisherProfileScreen extends StatelessWidget {
           style: TextButton.styleFrom(foregroundColor: Colors.redAccent.shade700),
           child: Text("Sign Out of Session", style: GoogleFonts.urbanist(fontWeight: FontWeight.w800, fontSize: 14)),
         ),
+        const SizedBox(height: 5),
         Text("App Version 2.0.4 - Bluelink Enterprise", style: GoogleFonts.urbanist(color: Colors.grey.shade400, fontSize: 11, fontWeight: FontWeight.w600)),
       ],
     );

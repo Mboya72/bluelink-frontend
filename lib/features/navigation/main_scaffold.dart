@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../core/app_theme.dart';
+import '../driver/screens/job_board_screen.dart';
 import '../fisherman/screens/dashboard_screen.dart';
 import '../fisherman/screens/logistics_screen.dart';
 import '../fisherman/screens/messages_screen.dart';
@@ -129,7 +130,7 @@ class _MainScaffoldState extends State<MainScaffold> {
             NavItem(icon: Icons.person_outline, label: "Profile"),
           ],
           screens: const [
-            Center(child: Text("Pickup Requests")),
+            DriverJobBoardScreen(),
             Center(child: Text("Maps")),
             Center(child: Text("Browse Equipment")),
             Center(child: Text("Chat")),
