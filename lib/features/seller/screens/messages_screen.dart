@@ -81,13 +81,19 @@ class _MessagesScreenState extends State<SellerMessagesScreen> {
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
-          BoxShadow(color: Colors.black.withValues(alpha: 0.02), blurRadius: 10)
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.02),
+            blurRadius: 10,
+          ),
         ],
       ),
       child: TextField(
         decoration: InputDecoration(
           hintText: "Search conversations...",
-          hintStyle: GoogleFonts.urbanist(color: Colors.grey[400], fontSize: 14),
+          hintStyle: GoogleFonts.urbanist(
+            color: Colors.grey[400],
+            fontSize: 14,
+          ),
           icon: const Icon(Icons.search_rounded, color: Colors.grey, size: 20),
           border: InputBorder.none,
         ),
@@ -231,11 +237,8 @@ class _MessagesScreenState extends State<SellerMessagesScreen> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => ChatDetailScreen(
-              name: name,
-              role: role,
-              url: url,
-            ),
+            builder: (context) =>
+                ChatDetailScreen(name: name, role: role, url: url),
           ),
         );
       },
@@ -246,7 +249,10 @@ class _MessagesScreenState extends State<SellerMessagesScreen> {
           color: Colors.white,
           borderRadius: BorderRadius.circular(24),
           boxShadow: [
-            BoxShadow(color: Colors.black.withValues(alpha: 0.01), blurRadius: 10)
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.01),
+              blurRadius: 10,
+            ),
           ],
         ),
         child: Row(
@@ -278,8 +284,12 @@ class _MessagesScreenState extends State<SellerMessagesScreen> {
                     overflow: TextOverflow.ellipsis,
                     style: GoogleFonts.urbanist(
                       fontSize: 13,
-                      color: unreadCount > 0 ? Colors.black87 : Colors.grey[500],
-                      fontWeight: unreadCount > 0 ? FontWeight.w700 : FontWeight.w500,
+                      color: unreadCount > 0
+                          ? Colors.black87
+                          : Colors.grey[500],
+                      fontWeight: unreadCount > 0
+                          ? FontWeight.w700
+                          : FontWeight.w500,
                     ),
                   ),
                 ],
@@ -356,7 +366,11 @@ class _MessagesScreenState extends State<SellerMessagesScreen> {
       child: FloatingActionButton(
         onPressed: () {},
         backgroundColor: const Color(0xFF1A237E),
-        child: const Icon(Icons.edit_note_rounded, color: Colors.white, size: 28),
+        child: const Icon(
+          Icons.edit_note_rounded,
+          color: Colors.white,
+          size: 28,
+        ),
       ),
     );
   }

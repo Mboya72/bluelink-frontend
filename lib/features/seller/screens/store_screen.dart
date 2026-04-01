@@ -12,6 +12,8 @@ class SellerStoreScreen extends StatefulWidget {
 class _SellerStoreScreenState extends State<SellerStoreScreen> {
   bool isOnline = true;
   bool pushNotifications = true;
+  int selectedPlanIndex = 0;
+
 
   @override
   Widget build(BuildContext context) {
@@ -46,6 +48,8 @@ class _SellerStoreScreenState extends State<SellerStoreScreen> {
                   _buildToggleCard("Store Visibility", "Currently appearing to buyers", isOnline, (val) => setState(() => isOnline = val)),
                   const SizedBox(height: 12),
                   _buildToggleCard("Push Notifications", "Critical shipment alerts", pushNotifications, (val) => setState(() => pushNotifications = val)),
+                  const SizedBox(height: 25),
+                  _buildPricingSection(),
                   const SizedBox(height: 40),
                   _buildLogoutButton(),
                   const SizedBox(height: 100), // Padding for Bottom Nav
@@ -83,6 +87,148 @@ class _SellerStoreScreenState extends State<SellerStoreScreen> {
         ),
         const SizedBox(width: 8),
       ],
+    );
+  }
+
+  Widget _buildPricingSection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _buildSectionTitle("Subscription Plan"),
+        const SizedBox(height: 16),
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          physics: const BouncingScrollPhysics(),
+          child: Row(
+            children: [
+              _pricingCard(
+                index: 0,
+                title: "Starter",
+                price: "1,500",
+                features: ["5 Shipments/mo", "Basic Tracking"],
+                color: Colors.teal,
+              ),
+              _pricingCard(
+                index: 1,
+                title: "Pro",
+                price: "4,500",
+                features: ["Unlimited Ships", "IoT Temp Logs", "Priority"],
+                color: const Color(0xFF1A237E),
+              ),
+              _pricingCard(
+                index: 2,
+                title: "Enterprise",
+                price: "12,000",
+                features: ["Custom Fleet", "API Access", "Dedicated Ops"],
+                color: Colors.purple,
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 20),
+        _buildActivePlanSummary(),
+      ],
+    );
+  }
+
+  Widget _pricingCard({
+    required int index,
+    required String title,
+    required String price,
+    required List<String> features,
+    required Color color,
+  }) {
+    bool isSelected = selectedPlanIndex == index;
+    return GestureDetector(
+      onTap: () => setState(() => selectedPlanIndex = index),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 300),
+        width: 160,
+        margin: const EdgeInsets.only(right: 16),
+        padding: const EdgeInsets.all(20),
+        decoration: BoxDecoration(
+          color: isSelected ? color : Colors.white,
+          borderRadius: BorderRadius.circular(24),
+          border: Border.all(
+            color: isSelected ? Colors.transparent : color.withValues(alpha: 0.1),
+          ),
+          boxShadow: isSelected
+              ? [BoxShadow(color: color.withValues(alpha: 0.3), blurRadius: 15, offset: const Offset(0, 8))]
+              : [],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              title,
+              style: GoogleFonts.urbanist(
+                fontSize: 14,
+                fontWeight: FontWeight.w900,
+                color: isSelected ? Colors.white : color,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text("Ksh ", style: GoogleFonts.urbanist(fontSize: 10, fontWeight: FontWeight.bold, color: isSelected ? Colors.white70 : Colors.grey)),
+                Text(price, style: GoogleFonts.urbanist(fontSize: 18, fontWeight: FontWeight.w900, color: isSelected ? Colors.white : Colors.black87)),
+              ],
+            ),
+            const SizedBox(height: 16),
+            ...features.map((f) => Padding(
+              padding: const EdgeInsets.only(bottom: 4),
+              child: Text("• $f", style: GoogleFonts.urbanist(fontSize: 10, color: isSelected ? Colors.white70 : Colors.grey[600], fontWeight: FontWeight.w600)),
+            )),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildActivePlanSummary() {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Row(
+        children: [
+          const Icon(Icons.info_outline_rounded, color: Colors.indigo, size: 20),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Text(
+              "You are currently on the ${selectedPlanIndex == 1 ? 'Pro' : selectedPlanIndex == 0 ? 'Starter' : 'Enterprise'} plan. Billing cycle ends in 24 days.",
+              style: GoogleFonts.urbanist(fontSize: 11, fontWeight: FontWeight.w600, color: Colors.grey[600]),
+            ),
+          ),
+          TextButton(
+            onPressed: () {},
+            child: Text("Invoice", style: GoogleFonts.urbanist(fontSize: 11, fontWeight: FontWeight.w900, color: Colors.indigo)),
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget _planFeature(IconData icon, String text) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8),
+      child: Row(
+        children: [
+          Icon(icon, size: 16, color: Colors.indigo),
+          const SizedBox(width: 10),
+          Text(
+            text,
+            style: GoogleFonts.urbanist(
+              fontSize: 12,
+              fontWeight: FontWeight.w600,
+              color: Colors.grey[700],
+            ),
+          ),
+        ],
+      ),
     );
   }
 
