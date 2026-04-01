@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../core/app_theme.dart';
+import '../buyer/screens/marketplace_screen.dart';
+import '../buyer/screens/orders_screen.dart';
 import '../driver/screens/active_trip_screen.dart';
 import '../driver/screens/drivers_market_screen.dart';
 import '../driver/screens/job_board_screen.dart';
@@ -103,8 +105,8 @@ class _MainScaffoldState extends State<MainScaffold> {
             NavItem(icon: Icons.person_outline, label: "Profile"),
           ],
           screens: const [
-            Center(child: Text("Browse Marketplace")),
-            Center(child: Text("Purchase History")),
+            BuyerMarketplaceScreen(),
+            BuyerOrdersScreen(),
             Center(child: Text("Live Map Tracking")),
             Center(child: Text("Chat")),
             Center(child: Text("Favorites / Wallet")),
