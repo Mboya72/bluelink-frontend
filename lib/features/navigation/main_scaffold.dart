@@ -20,7 +20,11 @@ import '../seller/screens/inventory_screen.dart';
 import '../seller/screens/messages_screen.dart';
 import '../seller/screens/seller_logistics_screen.dart';
 import '../seller/screens/store_screen.dart';
+import '../storage/screens/bookings_screen.dart';
 import '../storage/screens/facility_screen.dart';
+import '../storage/screens/marketplace_screen.dart';
+import '../storage/screens/messages_screen.dart';
+import '../storage/screens/storage_screen.dart';
 
 // --- MODELS ---
 
@@ -29,12 +33,14 @@ import '../storage/screens/facility_screen.dart';
 class NavItem {
   final IconData icon;
   final String label;
+
   const NavItem({required this.icon, required this.label});
 }
 
 class _NavConfig {
   final List<NavItem> items;
   final List<Widget> screens;
+
   _NavConfig({required this.items, required this.screens});
 }
 
@@ -63,14 +69,13 @@ class _MainScaffoldState extends State<MainScaffold> {
   @override
   Widget build(BuildContext context) {
     final navData = _getNavConfig(widget.role);
-    final activeIndex = _selectedIndex >= navData.screens.length ? 0 : _selectedIndex;
+    final activeIndex = _selectedIndex >= navData.screens.length
+        ? 0
+        : _selectedIndex;
 
     return Scaffold(
       extendBody: true,
-      body: IndexedStack(
-        index: activeIndex,
-        children: navData.screens,
-      ),
+      body: IndexedStack(index: activeIndex, children: navData.screens),
       bottomNavigationBar: CustomBottomNav(
         currentIndex: activeIndex,
         items: navData.items,
@@ -163,11 +168,11 @@ class _MainScaffoldState extends State<MainScaffold> {
             NavItem(icon: Icons.business_rounded, label: "Facility"),
           ],
           screens: const [
-            FacilityDashboardScreen(),
-            Center(child: Text("Manage Bookings")),
-            Center(child: Text("Marketplace")),
-            Center(child: Text("Chat")),
-            Center(child: Text("Facility Details")),
+            StorageScreen(),
+            BookingsScreen(),
+            StorageShopScreen(),
+            StorageMessagesScreen(),
+            StorageSettingsScreen(),
           ],
         );
 
@@ -259,7 +264,9 @@ class CustomBottomNav extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
                       fontSize: 10,
-                      fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                      fontWeight: isSelected
+                          ? FontWeight.bold
+                          : FontWeight.normal,
                       color: isSelected ? activeColor : inactiveColor,
                     ),
                   ),
