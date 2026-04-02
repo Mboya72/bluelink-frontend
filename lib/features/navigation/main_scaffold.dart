@@ -20,6 +20,7 @@ import '../seller/screens/inventory_screen.dart';
 import '../seller/screens/messages_screen.dart';
 import '../seller/screens/seller_logistics_screen.dart';
 import '../seller/screens/store_screen.dart';
+import '../storage/screens/facility_screen.dart';
 
 // --- MODELS ---
 
@@ -162,7 +163,7 @@ class _MainScaffoldState extends State<MainScaffold> {
             NavItem(icon: Icons.business_rounded, label: "Facility"),
           ],
           screens: const [
-            Center(child: Text("Capacity")),
+            FacilityDashboardScreen(),
             Center(child: Text("Manage Bookings")),
             Center(child: Text("Marketplace")),
             Center(child: Text("Chat")),
