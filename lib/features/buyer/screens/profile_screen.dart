@@ -1,4 +1,3 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -136,7 +135,7 @@ class _BuyerProfileScreenState extends State<BuyerProfileScreen> {
           color: const Color(0xFF1A237E),
           borderRadius: BorderRadius.circular(24),
           boxShadow: [
-            BoxShadow(color: const Color(0xFF1A237E).withOpacity(0.3), blurRadius: 15, offset: const Offset(0, 8))
+            BoxShadow(color: const Color(0xFF1A237E).withValues(alpha: 0.3), blurRadius: 15, offset: const Offset(0, 8))
           ],
         ),
         child: Column(
@@ -199,7 +198,7 @@ class _BuyerProfileScreenState extends State<BuyerProfileScreen> {
         borderRadius: BorderRadius.circular(28),
         boxShadow: [
           if (isActive)
-            BoxShadow(color: color.withOpacity(0.4), blurRadius: 12, offset: const Offset(0, 6))
+            BoxShadow(color: color.withValues(alpha: 0.4), blurRadius: 12, offset: const Offset(0, 6))
         ],
       ),
       child: Column(
@@ -247,7 +246,7 @@ class _BuyerProfileScreenState extends State<BuyerProfileScreen> {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: const Color(0xFFE0E5F2).withOpacity(0.5)),
+        border: Border.all(color: const Color(0xFFE0E5F2).withValues(alpha: 0.5)),
       ),
       child: Column(children: items),
     );

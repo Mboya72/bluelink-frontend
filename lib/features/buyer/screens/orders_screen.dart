@@ -52,7 +52,7 @@ class _BuyerOrdersScreenState extends State<BuyerOrdersScreen> with SingleTicker
       child: BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
         child: Container(
-          color: Colors.white.withOpacity(0.85),
+          color: Colors.white.withValues(alpha: 0.85),
           padding: EdgeInsets.fromLTRB(20, topPadding + 15, 20, 15),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -96,7 +96,7 @@ class _BuyerOrdersScreenState extends State<BuyerOrdersScreen> with SingleTicker
                     borderRadius: BorderRadius.circular(10),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.05),
+                        color: Colors.black.withValues(alpha: 0.05),
                         blurRadius: 4,
                         offset: const Offset(0, 2),
                       )
@@ -205,7 +205,7 @@ class _BuyerOrdersScreenState extends State<BuyerOrdersScreen> with SingleTicker
                   children: [
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                      decoration: BoxDecoration(color: statusColor.withOpacity(0.08), borderRadius: BorderRadius.circular(6)),
+                      decoration: BoxDecoration(color: statusColor.withValues(alpha: 0.08), borderRadius: BorderRadius.circular(6)),
                       child: Text(status, style: GoogleFonts.urbanist(color: statusColor, fontSize: 10, fontWeight: FontWeight.w900, letterSpacing: 0.5)),
                     ),
                   ],
@@ -292,7 +292,7 @@ class _BuyerOrdersScreenState extends State<BuyerOrdersScreen> with SingleTicker
       decoration: BoxDecoration(
         color: const Color(0xFFFFF5F5),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.red.withOpacity(0.1)),
+        border: Border.all(color: Colors.red.withValues(alpha: 0.1)),
       ),
       child: Row(
         children: [
