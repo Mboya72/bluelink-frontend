@@ -120,7 +120,7 @@ class _BuyerChatDetailScreenState extends State<BuyerChatDetailScreen> {
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
       decoration: BoxDecoration(
         color: Colors.white,
-        border: Border(bottom: BorderSide(color: Colors.indigo.withOpacity(0.05))),
+        border: Border(bottom: BorderSide(color: Colors.indigo.withValues(alpha: 0.05))),
       ),
       child: Row(
         children: [
@@ -190,7 +190,7 @@ class _BuyerChatDetailScreenState extends State<BuyerChatDetailScreen> {
               ),
               boxShadow: [
                 if (!isMe)
-                  BoxShadow(color: Colors.black.withOpacity(0.03), blurRadius: 10, offset: const Offset(0, 4))
+                  BoxShadow(color: Colors.black.withValues(alpha: 0.03), blurRadius: 10, offset: const Offset(0, 4))
               ],
             ),
             child: Text(
@@ -220,7 +220,7 @@ class _BuyerChatDetailScreenState extends State<BuyerChatDetailScreen> {
       decoration: BoxDecoration(
         color: Colors.white,
         boxShadow: [
-          BoxShadow(color: Colors.black.withOpacity(0.02), blurRadius: 10, offset: const Offset(0, -5))
+          BoxShadow(color: Colors.black.withValues(alpha: 0.02), blurRadius: 10, offset: const Offset(0, -5))
         ],
         border: const Border(top: BorderSide(color: Color(0xFFF1F3F9))),
       ),

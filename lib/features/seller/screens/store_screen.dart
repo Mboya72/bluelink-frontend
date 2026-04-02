@@ -212,26 +212,6 @@ class _SellerStoreScreenState extends State<SellerStoreScreen> {
     );
   }
 
-  Widget _planFeature(IconData icon, String text) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 8),
-      child: Row(
-        children: [
-          Icon(icon, size: 16, color: Colors.indigo),
-          const SizedBox(width: 10),
-          Text(
-            text,
-            style: GoogleFonts.urbanist(
-              fontSize: 12,
-              fontWeight: FontWeight.w600,
-              color: Colors.grey[700],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
   Widget _buildStoreProfileCard() {
     return Container(
       padding: const EdgeInsets.all(20),

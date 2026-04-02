@@ -13,14 +13,10 @@ class SellerTrackingScreen extends StatefulWidget {
 class _SellerTrackingScreenState extends State<SellerTrackingScreen> {
   bool _showCameraFeed = false;
   bool _isCameraLoading = false;
-  double _animationValue = 0.0;
 
   @override
   void initState() {
     super.initState();
-    Future.delayed(const Duration(milliseconds: 800), () {
-      if (mounted) setState(() => _animationValue = 1.0);
-    });
   }
 
   void _toggleCamera() {
@@ -186,9 +182,9 @@ class _SellerTrackingScreenState extends State<SellerTrackingScreen> {
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 12),
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.85),
+              color: Colors.white.withValues(alpha: 0.85),
               borderRadius: BorderRadius.circular(20),
-              border: Border.all(color: Colors.white.withOpacity(0.5)),
+              border: Border.all(color: Colors.white.withValues(alpha: 0.5)),
             ),
             child: Row(
               children: [
@@ -234,7 +230,7 @@ class _SellerTrackingScreenState extends State<SellerTrackingScreen> {
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: const BorderRadius.vertical(top: Radius.circular(35)),
-            boxShadow: [BoxShadow(color: const Color(0xFF1A237E).withOpacity(0.12), blurRadius: 30, offset: const Offset(0, -10))],
+            boxShadow: [BoxShadow(color: const Color(0xFF1A237E).withValues(alpha: 0.12), blurRadius: 30, offset: const Offset(0, -10))],
           ),
           child: SingleChildScrollView(
             controller: scrollController,
@@ -423,7 +419,7 @@ class SparklinePainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = const Color(0xFF1A237E).withOpacity(0.4)
+      ..color = const Color(0xFF1A237E).withValues(alpha: 0.4)
       ..strokeWidth = 2.5
       ..style = PaintingStyle.stroke
       ..strokeCap = StrokeCap.round;

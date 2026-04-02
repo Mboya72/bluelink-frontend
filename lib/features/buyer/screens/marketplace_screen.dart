@@ -1,4 +1,3 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -14,55 +13,80 @@ class _BuyerMarketplaceScreenState extends State<BuyerMarketplaceScreen> {
   @override
   Widget build(BuildContext context) {
     return AnnotatedRegion<SystemUiOverlayStyle>(
-      // Set the status bar to transparent and icons to dark
-      value: const SystemUiOverlayStyle(
-        statusBarColor: Colors.transparent,
-        statusBarIconBrightness: Brightness.dark,
-        systemNavigationBarColor: Colors.white,
-        systemNavigationBarIconBrightness: Brightness.dark,
-      ),
+      value: SystemUiOverlayStyle.dark,
       child: Scaffold(
-        extendBody: true,
-        backgroundColor: const Color(0xFFF9FBFF),
-        // Removed Top SafeArea so content flows to the very top edge
-        body: CustomScrollView(
-          physics: const BouncingScrollPhysics(),
-          slivers: [
-            // Sticky Blurry Header
-            SliverPersistentHeader(
-              pinned: true,
-              delegate: _StickyBlurryHeaderDelegate(),
-            ),
-
-            SliverPadding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              sliver: SliverList(
-                delegate: SliverChildListDelegate([
-                  const SizedBox(height: 20),
-                  _buildSearchBar(),
-                  const SizedBox(height: 25),
-                  _buildMarinePromo(),
-                  const SizedBox(height: 25),
-                  _buildCategoryGrid(),
-                  const SizedBox(height: 30),
-                  _buildSectionHeader("Certified Suppliers"),
-                  const SizedBox(height: 15),
-                  _buildSupplierLogos(),
-                  const SizedBox(height: 30),
-                  _buildSectionHeader("Fresh Daily Catch"),
-                  const SizedBox(height: 15),
-                  _buildProductGrid(),
-                  const SizedBox(height: 40),
-                ]),
+        backgroundColor: const Color(0xFFF9FBFF), // Soft blue-tinted white
+        bottomNavigationBar: _buildBottomNav(),
+        body: SafeArea(
+          child: CustomScrollView(
+            physics: const BouncingScrollPhysics(),
+            slivers: [
+              _buildBluelinkHeader(),
+              SliverPadding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                sliver: SliverList(
+                  delegate: SliverChildListDelegate([
+                    const SizedBox(height: 20),
+                    _buildSearchBar(),
+                    const SizedBox(height: 25),
+                    _buildMarinePromo(),
+                    const SizedBox(height: 25),
+                    _buildCategoryGrid(),
+                    const SizedBox(height: 30),
+                    _buildSectionHeader("Certified Suppliers"),
+                    const SizedBox(height: 15),
+                    _buildSupplierLogos(),
+                    const SizedBox(height: 30),
+                    _buildSectionHeader("Fresh Daily Catch"),
+                    const SizedBox(height: 15),
+                    _buildProductGrid(),
+                    const SizedBox(height: 100),
+                  ]),
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
   }
 
-  // --- UI Components ---
+  Widget _buildBluelinkHeader() {
+    return SliverToBoxAdapter(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+        child: Row(
+          children: [
+            const CircleAvatar(
+              radius: 22,
+              backgroundColor: Color(0xFF1A237E),
+              child: Icon(Icons.person, color: Colors.white, size: 24),
+            ),
+            const SizedBox(width: 12),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Text("Maina Chengo",
+                        style: GoogleFonts.urbanist(fontWeight: FontWeight.w800, fontSize: 15)),
+                    const SizedBox(width: 4),
+                    const Icon(Icons.verified, color: Colors.blue, size: 14),
+                  ],
+                ),
+                Text("Mombasa, Kenya",
+                    style: GoogleFonts.urbanist(color: Colors.grey, fontSize: 12)),
+              ],
+            ),
+            const Spacer(),
+            _iconButton(Icons.anchor_rounded), // Themed icon
+            const SizedBox(width: 10),
+            _iconBadgeButton(Icons.notifications_none_rounded, "5"),
+          ],
+        ),
+      ),
+    );
+  }
 
   Widget _buildSearchBar() {
     return Container(
@@ -71,7 +95,7 @@ class _BuyerMarketplaceScreenState extends State<BuyerMarketplaceScreen> {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(15),
-        border: Border.all(color: const Color(0xFF1A237E).withOpacity(0.08)),
+        border: Border.all(color: const Color(0xFF1A237E).withValues(alpha: 0.08)),
       ),
       child: Row(
         children: [
@@ -86,7 +110,7 @@ class _BuyerMarketplaceScreenState extends State<BuyerMarketplaceScreen> {
               ),
             ),
           ),
-          const Icon(Icons.tune_rounded, color: Color(0xFF1A237E), size: 20),
+          Icon(Icons.tune_rounded, color: const Color(0xFF1A237E), size: 20),
         ],
       ),
     );
@@ -108,7 +132,7 @@ class _BuyerMarketplaceScreenState extends State<BuyerMarketplaceScreen> {
         children: [
           Positioned(
             right: -10, bottom: -10,
-            child: Icon(Icons.waves_rounded, size: 180, color: Colors.white.withOpacity(0.05)),
+            child: Icon(Icons.waves_rounded, size: 180, color: Colors.white.withValues(alpha: 0.05)),
           ),
           Padding(
             padding: const EdgeInsets.all(20),
@@ -118,7 +142,7 @@ class _BuyerMarketplaceScreenState extends State<BuyerMarketplaceScreen> {
                 Text("BULK BUYER OFFERS", style: GoogleFonts.urbanist(fontSize: 11, fontWeight: FontWeight.w800, color: Colors.white70, letterSpacing: 1.2)),
                 const SizedBox(height: 8),
                 Text("Yellowfin Tuna", style: GoogleFonts.urbanist(fontSize: 24, fontWeight: FontWeight.w900, color: Colors.white)),
-                Text("15% OFF Bulk Orders", style: GoogleFonts.urbanist(fontSize: 14, color: Colors.white.withOpacity(0.8), fontWeight: FontWeight.w600)),
+                Text("15% OFF Bulk Orders", style: GoogleFonts.urbanist(fontSize: 14, color: Colors.white.withValues(alpha: 0.8), fontWeight: FontWeight.w600)),
                 const Spacer(),
                 ElevatedButton(
                   onPressed: () {},
@@ -159,7 +183,7 @@ class _BuyerMarketplaceScreenState extends State<BuyerMarketplaceScreen> {
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(15),
-            border: Border.all(color: const Color(0xFF1A237E).withOpacity(0.08)),
+            border: Border.all(color: const Color(0xFF1A237E).withValues(alpha: 0.08)),
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -182,7 +206,7 @@ class _BuyerMarketplaceScreenState extends State<BuyerMarketplaceScreen> {
           decoration: BoxDecoration(
               color: Colors.white,
               shape: BoxShape.circle,
-              boxShadow: [BoxShadow(color: const Color(0xFF1A237E).withOpacity(0.05), blurRadius: 10, offset: const Offset(0, 4))]
+              boxShadow: [BoxShadow(color: const Color(0xFF1A237E).withValues(alpha: 0.05), blurRadius: 10, offset: const Offset(0, 4))]
           ),
           alignment: Alignment.center,
           child: Text(icon, style: const TextStyle(fontSize: 24)),
@@ -237,7 +261,7 @@ class _BuyerMarketplaceScreenState extends State<BuyerMarketplaceScreen> {
       decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(20),
-          boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.02), blurRadius: 10)]
+          boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.02), blurRadius: 10)]
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -276,84 +300,24 @@ class _BuyerMarketplaceScreenState extends State<BuyerMarketplaceScreen> {
       ],
     );
   }
-}
 
-// --- Delegate for the Sticky Blurry Header ---
+  Widget _iconButton(IconData icon) => Container(padding: const EdgeInsets.all(8), decoration: BoxDecoration(color: Colors.white, shape: BoxShape.circle, border: Border.all(color: const Color(0xFF1A237E).withValues(alpha: 0.1))), child: Icon(icon, size: 20, color: const Color(0xFF1A237E)));
 
-class _StickyBlurryHeaderDelegate extends SliverPersistentHeaderDelegate {
-  @override
-  // Increased height to account for the status bar padding
-  double get minExtent => 100.0;
-  @override
-  double get maxExtent => 100.0;
+  Widget _iconBadgeButton(IconData icon, String count) => Stack(children: [ _iconButton(icon), Positioned(right: 0, top: 0, child: Container(padding: const EdgeInsets.all(4), decoration: const BoxDecoration(color: Colors.redAccent, shape: BoxShape.circle), child: Text(count, style: const TextStyle(color: Colors.white, fontSize: 8, fontWeight: FontWeight.bold))))]);
 
-  @override
-  Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
-    // Get top padding (notch height) to push content down from the status bar
-    final double topPadding = MediaQuery.of(context).padding.top;
-
-    return ClipRect(
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 12.0, sigmaY: 12.0),
-        child: Container(
-          color: const Color(0xFFF9FBFF).withOpacity(0.7),
-          padding: EdgeInsets.fromLTRB(20, topPadding, 20, 0),
-          alignment: Alignment.center,
-          child: Row(
-            children: [
-              const CircleAvatar(
-                radius: 22,
-                backgroundColor: Color(0xFF1A237E),
-                child: Icon(Icons.person, color: Colors.white, size: 24),
-              ),
-              const SizedBox(width: 12),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Row(
-                    children: [
-                      Text("Maina Chengo",
-                          style: GoogleFonts.urbanist(fontWeight: FontWeight.w800, fontSize: 15)),
-                      const SizedBox(width: 4),
-                      const Icon(Icons.verified, color: Colors.blue, size: 14),
-                    ],
-                  ),
-                  Text("Mombasa, Kenya",
-                      style: GoogleFonts.urbanist(color: Colors.grey, fontSize: 12)),
-                ],
-              ),
-              const Spacer(),
-              _iconButton(Icons.anchor_rounded),
-              const SizedBox(width: 10),
-              _iconBadgeButton(Icons.notifications_none_rounded, "5"),
-            ],
-          ),
-        ),
-      ),
+  Widget _buildBottomNav() {
+    return BottomNavigationBar(
+      type: BottomNavigationBarType.fixed,
+      selectedItemColor: const Color(0xFF1A237E),
+      unselectedItemColor: Colors.grey[400],
+      showSelectedLabels: true,
+      elevation: 20,
+      items: const [
+        BottomNavigationBarItem(icon: Icon(Icons.home_filled), label: "Home"),
+        BottomNavigationBarItem(icon: Icon(Icons.explore_outlined), label: "Market"),
+        BottomNavigationBarItem(icon: Icon(Icons.shopping_cart_outlined), label: "Orders"),
+        BottomNavigationBarItem(icon: Icon(Icons.person_outline), label: "Profile"),
+      ],
     );
   }
-
-  Widget _iconButton(IconData icon) => Container(
-    padding: const EdgeInsets.all(8),
-    decoration: BoxDecoration(
-        color: Colors.white,
-        shape: BoxShape.circle,
-        border: Border.all(color: const Color(0xFF1A237E).withOpacity(0.1))),
-    child: Icon(icon, size: 20, color: const Color(0xFF1A237E)),
-  );
-
-  Widget _iconBadgeButton(IconData icon, String count) => Stack(children: [
-    _iconButton(icon),
-    Positioned(
-        right: 0,
-        top: 0,
-        child: Container(
-            padding: const EdgeInsets.all(4),
-            decoration: const BoxDecoration(color: Colors.redAccent, shape: BoxShape.circle),
-            child: Text(count, style: const TextStyle(color: Colors.white, fontSize: 8, fontWeight: FontWeight.bold))))
-  ]);
-
-  @override
-  bool shouldRebuild(covariant SliverPersistentHeaderDelegate oldDelegate) => false;
 }

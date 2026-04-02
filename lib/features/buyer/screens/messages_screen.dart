@@ -5,7 +5,6 @@ import 'package:google_fonts/google_fonts.dart';
 
 import 'buyer_chat_detail_screen.dart';
 
-// Assuming BuyerChatDetailScreen is in another file or defined below
 class BuyerMessagesScreen extends StatefulWidget {
   const BuyerMessagesScreen({super.key});
 
@@ -52,7 +51,6 @@ class _BuyerMessagesScreenState extends State<BuyerMessagesScreen> with SingleTi
           ],
         ),
         floatingActionButton: Padding(
-          // Optional: Add padding to FAB if it feels too low
           padding: const EdgeInsets.only(bottom: 95, right: 5),
           child: FloatingActionButton(
             onPressed: () {},
@@ -72,7 +70,7 @@ class _BuyerMessagesScreenState extends State<BuyerMessagesScreen> with SingleTi
       child: BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
         child: Container(
-          color: Colors.white.withOpacity(0.85),
+          color: Colors.white.withValues(alpha: 0.85),
           padding: EdgeInsets.fromLTRB(20, topPadding + 15, 20, 15),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -108,7 +106,7 @@ class _BuyerMessagesScreenState extends State<BuyerMessagesScreen> with SingleTi
                     borderRadius: BorderRadius.circular(10),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.05),
+                        color: Colors.black.withValues(alpha: 0.05),
                         blurRadius: 4,
                         offset: const Offset(0, 2),
                       )
@@ -173,7 +171,6 @@ class _BuyerMessagesScreenState extends State<BuyerMessagesScreen> with SingleTi
   }) {
     return GestureDetector(
       onTap: () {
-        // Correctly navigating to the detail screen
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -190,7 +187,7 @@ class _BuyerMessagesScreenState extends State<BuyerMessagesScreen> with SingleTi
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(18),
-          border: Border.all(color: const Color(0xFFE0E5F2).withOpacity(0.5)),
+          border: Border.all(color: const Color(0xFFE0E5F2).withValues(alpha: 0.5)),
         ),
         child: Row(
           children: [
@@ -316,11 +313,11 @@ class _BuyerMessagesScreenState extends State<BuyerMessagesScreen> with SingleTi
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         gradient: LinearGradient(
-            colors: [const Color(0xFF1A237E).withOpacity(0.05), Colors.white],
+            colors: [const Color(0xFF1A237E).withValues(alpha: 0.05), Colors.white],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight),
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: const Color(0xFF1A237E).withOpacity(0.1)),
+        border: Border.all(color: const Color(0xFF1A237E).withValues(alpha: 0.1)),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
