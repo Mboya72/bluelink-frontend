@@ -186,10 +186,10 @@ class _MainScaffoldState extends State<MainScaffold> {
             NavItem(icon: Icons.insights_rounded, label: "Logs"),
           ],
           screens: const [
-            Center(child: Text("Verify IDs")),
+            Center(child: Text("Verify Ids")),
             Center(child: Text("Ads Control")),
             Center(child: Text("Resolution")),
-            Center(child: Text("Finance Hub")),
+            Center(child: Text("Finance hied")),
             Center(child: Text("Analytics")),
           ],
         );
