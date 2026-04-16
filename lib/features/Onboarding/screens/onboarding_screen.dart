@@ -12,120 +12,258 @@ class OnboardingScreen extends StatefulWidget {
 }
 
 class _OnboardingScreenState extends State<OnboardingScreen> {
-  final PageController _controller = PageController();
-  int _current = 0;
   UserRole? _selectedRole;
 
-  final List<Map<String, String>> _pages = const [
-    {
-      'image': 'assets/images/logop1.png',
-      'title': 'Welcome to Blue Link',
-      'subtitle': 'The digital home for the blue economy. Connecting boats to businesses.',
-    },
-    {
-      'image': 'assets/images/market.png',
-      'title': 'Direct Market Access',
-      'subtitle': 'Skip the middlemen. Connect directly with buyers and premium logistics.',
-    },
-    {
-      'image': 'assets/images/payment.png',
-      'title': 'Instant Payouts', // Focus on "Getting Paid" rather than "Security"
-      'subtitle': 'Track your earnings and receive payments instantly upon delivery.',
-    },
-  ];
+  // Single page data as requested
+  final Map<String, String> _pageData = const {
+    'image': 'assets/images/fish.png',
+    'title': 'Empowering Kenya’s Blue Economy:\nOne Click at a Time',
+    'subtitle': 'Simplifying the complex. Connecting the disconnected.',
+  };
+
+  @override
+  Widget build(BuildContext context) {
+    final double screenHeight = MediaQuery.of(context).size.height;
+
+    return Scaffold(
+      backgroundColor: const Color(0xFFF7FAFF),
+      body: SafeArea(
+        top: false,
+        child: Column(
+          children: [
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const SizedBox(height: 60),
+                  // Centered Illustration
+                  Container(
+                    height: screenHeight * 0.4,
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: Image.asset(
+                      _pageData['image']!,
+                      fit: BoxFit.contain,
+                    ),
+                  ),
+                  const SizedBox(height: 40),
+                  // Text Content
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 30),
+                    child: Column(
+                      children: [
+                        Text(
+                          _pageData['title']!,
+                          textAlign: TextAlign.left,
+                          style: GoogleFonts.urbanist(
+                            fontSize: 38,
+                            fontWeight: FontWeight.w700,
+                            color: const Color(0xFF0080FF),
+                            height: 1.1,
+                          ),
+                        ),
+                        const SizedBox(height: 18),
+                        Text(
+                          _pageData['subtitle']!,
+                          textAlign: TextAlign.left,
+                          style: GoogleFonts.urbanist(
+                            fontSize: 20,
+                            color: const Color(0xFF00A3FF),
+                            fontWeight: FontWeight.w500,
+                            height: 1.4,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            // Action Section
+            Padding(
+              padding: const EdgeInsets.fromLTRB(32, 0, 32, 60),
+              child: Column(
+                children: [
+                  SizedBox(
+                    width: double.infinity,
+                    height: 58,
+                    child: ElevatedButton(
+                      onPressed: _showRoleSelection,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFF0080FF),
+                        foregroundColor: Colors.white,
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+                        elevation: 0,
+                      ),
+                      child: Text(
+                        'Get Started',
+                        style: GoogleFonts.urbanist(
+                          fontSize: 19,
+                          fontWeight: FontWeight.w700,
+                          letterSpacing: 0.5,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 25),
+                  GestureDetector(
+                    onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (_) => const LoginScreen())
+                    ),
+                    child: RichText(
+                      text: TextSpan(
+                        style: GoogleFonts.urbanist(color: Colors.grey[600], fontSize: 15),
+                        children: [
+                          const TextSpan(text: "Already have an account? "),
+                          TextSpan(
+                            text: "Sign in",
+                            style: const TextStyle(
+                              fontWeight: FontWeight.w800,
+                              color: Color(0xFF0080FF),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 
   void _showRoleSelection() {
     final selectableRoles = UserRole.values.where((r) => r != UserRole.admin).toList();
 
-    showDialog(
+    showGeneralDialog(
       context: context,
       barrierDismissible: true,
-      builder: (context) => StatefulBuilder(
-        builder: (context, setDialogState) => Dialog(
-          insetPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(32)),
-          backgroundColor: const Color(0xFFE6F2FF),
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.all(28),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const SizedBox(width: 32),
-                    Image.asset('assets/images/logo.png', height: 35),
-                    IconButton(
-                        onPressed: () => Navigator.pop(context),
-                        icon: const Icon(Icons.close_rounded, color: Colors.grey)),
-                  ],
-                ),
-                const SizedBox(height: 10),
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
-                  decoration: BoxDecoration(
-                      color: AppTheme.vibrantBlue.withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(12)),
-                  child: Text("Blue Link Ecosystem",
-                      style: GoogleFonts.urbanist(
-                          fontWeight: FontWeight.w800,
-                          color: AppTheme.vibrantBlue,
-                          fontSize: 12,
-                          letterSpacing: 1.1)),
-                ),
-                const SizedBox(height: 24),
-                Text("Choose your role",
-                    textAlign: TextAlign.center,
-                    style: GoogleFonts.urbanist(
-                        fontSize: 30, fontWeight: FontWeight.w900, color: AppTheme.navyDark)),
-                const SizedBox(height: 12),
-                Text("Select a role to tailor your experience.",
-                    textAlign: TextAlign.center,
-                    style: GoogleFonts.urbanist(color: Colors.black54, fontWeight: FontWeight.w500)),
-                const SizedBox(height: 32),
-                GridView.builder(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      crossAxisSpacing: 16,
-                      mainAxisSpacing: 16,
-                      childAspectRatio: 1.2),
-                  itemCount: selectableRoles.length,
-                  itemBuilder: (context, i) {
-                    final role = selectableRoles[i];
-                    return _roleCard(role, _selectedRole == role,
-                            () => setDialogState(() => _selectedRole = role));
-                  },
-                ),
-                const SizedBox(height: 32),
-                SizedBox(
-                  width: double.infinity,
-                  height: 60,
-                  child: ElevatedButton(
-                    onPressed: _selectedRole == null ? null : () {
-                      Navigator.pop(context);
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => SignUpScreen(selectedRole: _selectedRole!),
-                        ),
-                      );
-                    },
-                    style: ElevatedButton.styleFrom(
-                        backgroundColor: AppTheme.vibrantBlue,
-                        elevation: 0,
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20))),
-                    child: Text("CONTINUE",
+      barrierLabel: '',
+      barrierColor: Colors.black.withValues(alpha: 0.4), // Dim the background
+      transitionDuration: const Duration(milliseconds: 300),
+      pageBuilder: (context, anim1, anim2) => const SizedBox(), // Placeholder
+      transitionBuilder: (context, anim1, anim2, child) {
+        return Transform.scale(
+          scale: anim1.value,
+          child: Opacity(
+            opacity: anim1.value,
+            child: StatefulBuilder(
+              builder: (context, setDialogState) => Dialog(
+                insetPadding: const EdgeInsets.symmetric(horizontal: 20),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(35)),
+                backgroundColor: const Color(0xFFF0F7FF), // Very light airy blue
+                child: Container(
+                  padding: const EdgeInsets.all(24),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      // Header Section
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const SizedBox(width: 40),
+                          // Small Blue Link Branding
+                          Column(
+                            children: [
+                              Image.asset('assets/images/logo.png', height: 50),
+                            ],
+                          ),
+                          IconButton(
+                            onPressed: () => Navigator.pop(context),
+                            icon: const Icon(Icons.close_rounded, color: Colors.blueGrey),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 10),
+
+                      Text(
+                        "Join as a Partner",
                         style: GoogleFonts.urbanist(
-                            fontWeight: FontWeight.w800, color: Colors.white, letterSpacing: 1.2)),
+                          fontSize: 28,
+                          fontWeight: FontWeight.w800,
+                          color: const Color(0xFF0D1231),
+                          letterSpacing: -0.5,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        "Select your role to personalize your dashboard",
+                        textAlign: TextAlign.center,
+                        style: GoogleFonts.urbanist(
+                          fontSize: 14,
+                          color: Colors.blueGrey[400],
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      const SizedBox(height: 30),
+
+                      // Grid of Roles
+                      GridView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          crossAxisSpacing: 12,
+                          mainAxisSpacing: 12,
+                          childAspectRatio: 1.1,
+                        ),
+                        itemCount: selectableRoles.length,
+                        itemBuilder: (context, i) {
+                          final role = selectableRoles[i];
+                          return _roleCard(
+                            role,
+                            _selectedRole == role,
+                                () => setDialogState(() => _selectedRole = role),
+                          );
+                        },
+                      ),
+                      const SizedBox(height: 30),
+
+                      // Action Button
+                      SizedBox(
+                        width: double.infinity,
+                        height: 58,
+                        child: ElevatedButton(
+                          onPressed: _selectedRole == null
+                              ? null
+                              : () {
+                            Navigator.pop(context);
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => SignUpScreen(selectedRole: _selectedRole!),
+                              ),
+                            );
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFF0080FF),
+                            disabledBackgroundColor: Colors.grey[200],
+                            elevation: 0,
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                          ),
+                          child: Text(
+                            "CONTINUE",
+                            style: GoogleFonts.urbanist(
+                              fontWeight: FontWeight.w900,
+                              color: Colors.white,
+                              fontSize: 15,
+                              letterSpacing: 1.2,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-              ],
+              ),
             ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 
@@ -134,33 +272,50 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       onTap: onTap,
       borderRadius: BorderRadius.circular(24),
       child: AnimatedContainer(
-        duration: const Duration(milliseconds: 250),
+        duration: const Duration(milliseconds: 200),
+        curve: Curves.easeInOut,
         decoration: BoxDecoration(
-          color: isSelected ? Colors.white : Colors.white.withValues(alpha: 0.5),
-          border: Border.all(
-              color: isSelected ? AppTheme.vibrantBlue : Colors.transparent, width: 2.5),
+          color: isSelected ? Colors.white : Colors.white.withValues(alpha: 0.4),
           borderRadius: BorderRadius.circular(24),
+          border: Border.all(
+            color: isSelected ? const Color(0xFF0080FF) : Colors.white.withValues(alpha: 0.8),
+            width: 2,
+          ),
           boxShadow: isSelected
               ? [
             BoxShadow(
-                color: AppTheme.vibrantBlue.withValues(alpha: 0.1),
-                blurRadius: 10,
-                offset: const Offset(0, 4))
+              color: const Color(0xFF0080FF).withValues(alpha: 0.1),
+              blurRadius: 15,
+              offset: const Offset(0, 8),
+            )
           ]
               : [],
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(_getRoleIcon(role),
-                color: isSelected ? AppTheme.vibrantBlue : AppTheme.navyDark.withValues(alpha: 0.4),
-                size: 32),
-            const SizedBox(height: 10),
-            Text(role.name[0].toUpperCase() + role.name.substring(1),
-                style: GoogleFonts.urbanist(
-                    fontWeight: isSelected ? FontWeight.w900 : FontWeight.w700,
-                    fontSize: 14,
-                    color: isSelected ? AppTheme.vibrantBlue : AppTheme.navyDark)),
+            // Icon with soft background circle when selected
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: isSelected ? const Color(0xFF0080FF).withValues(alpha: 0.1) : Colors.transparent,
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                _getRoleIcon(role),
+                color: isSelected ? const Color(0xFF0080FF) : const Color(0xFF0D1231).withValues(alpha: 0.3),
+                size: 28,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              role.name[0].toUpperCase() + role.name.substring(1),
+              style: GoogleFonts.urbanist(
+                fontWeight: isSelected ? FontWeight.w800 : FontWeight.w600,
+                fontSize: 14,
+                color: isSelected ? const Color(0xFF0080FF) : const Color(0xFF0D1231),
+              ),
+            ),
           ],
         ),
       ),
@@ -176,154 +331,5 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       case UserRole.storage:   return Icons.warehouse_outlined;
       case UserRole.admin:     return Icons.admin_panel_settings_outlined;
     }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final double screenHeight = MediaQuery.of(context).size.height;
-
-    return Scaffold(
-      backgroundColor: const Color(0xFFE6F2FF),
-      body: SafeArea(
-        top: false,
-        child: Column(
-          children: [
-            Expanded(
-              child: PageView.builder(
-                controller: _controller,
-                itemCount: _pages.length,
-                onPageChanged: (i) => setState(() => _current = i),
-                itemBuilder: (_, i) {
-                  final String currentImagePath = _pages[i]['image']!;
-                  final bool isLogo = i == 0;
-                  final bool isFisher = i == 1;
-                  final bool isPayout = i == 2;
-
-                  return Column(
-                    children: [
-                      const SizedBox(height: 90),
-                      // 1. Remove double.infinity and use a Center + Constrained Container
-                      Center(
-                        child: SizedBox(
-                          // Use 85% of screen width for a clean "inset" look
-                          width: MediaQuery.of(context).size.width * 0.85,
-                          height: isLogo
-                              ? screenHeight * 0.25
-                              : (isFisher || isPayout ? screenHeight * 0.45 : screenHeight * 0.35),
-                          child: Padding(
-                            padding: EdgeInsets.all(isPayout ? 30.0 : 0.0), // Internal padding for the "card"
-                            child: Image.asset(
-                              currentImagePath,
-                              // BoxFit.contain is much safer for "objects" like payment cards
-                              fit: (isLogo || isFisher || isPayout) ? BoxFit.contain : BoxFit.cover,
-                              errorBuilder: (context, error, stackTrace) => const Icon(Icons.payments_outlined, size: 50),
-                            ),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 40),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 40),
-                        child: Column(
-                          children: [
-                            Text(_pages[i]['title']!,
-                                textAlign: TextAlign.center,
-                                style: GoogleFonts.urbanist(
-                                    fontSize: 42,
-                                    fontWeight: FontWeight.w700,
-                                    color: const Color(0xFF0080FF),
-                                    height: 1.1)),
-                            const SizedBox(height: 20),
-                            Text(_pages[i]['subtitle']!,
-                                textAlign: TextAlign.center,
-                                style: GoogleFonts.urbanist(
-                                    fontSize: 16,
-                                    color: Colors.black54,
-                                    fontWeight: FontWeight.w500,
-                                    height: 1.5)),
-                          ],
-                        ),
-                      ),
-                    ],
-                  );
-                },
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(32, 0, 32, 40),
-              child: Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: List.generate(
-                        _pages.length,
-                            (i) => AnimatedContainer(
-                          duration: const Duration(milliseconds: 300),
-                          margin: const EdgeInsets.symmetric(horizontal: 4),
-                          height: 8,
-                          width: _current == i ? 24 : 8,
-                          decoration: BoxDecoration(
-                            color: _current == i ? AppTheme.vibrantBlue : Colors.white,
-                            borderRadius: BorderRadius.circular(4),
-                          ),
-                        )),
-                  ),
-                  const SizedBox(height: 48),
-                  SizedBox(
-                    width: double.infinity,
-                    height: 55, // Slightly increased height for better tap target
-                    child: ElevatedButton(
-                      onPressed: _current == _pages.length - 1
-                          ? _showRoleSelection
-                          : () => _controller.nextPage(
-                          duration: const Duration(milliseconds: 500),
-                          curve: Curves.easeInOutCubic),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppTheme.vibrantBlue,
-                        foregroundColor: Colors.white,
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
-                        elevation: 0,
-                      ),
-                      child: Text(
-                        _current == _pages.length - 1 ? 'Get Started' : 'Next',
-                        style: GoogleFonts.urbanist(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w800,
-                          letterSpacing: 1.1,
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  TextButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => const LoginScreen()),
-                      );
-                    },
-                    child: RichText(
-                      text: TextSpan(
-                        style: GoogleFonts.urbanist(color: Colors.grey[600], fontSize: 14),
-                        children: [
-                          const TextSpan(text: "Already have an account? "),
-                          TextSpan(
-                            text: "Sign in",
-                            style: TextStyle(
-                              fontWeight: FontWeight.w900,
-                              color: AppTheme.vibrantBlue,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
   }
 }
