@@ -95,14 +95,17 @@ class _MainScaffoldState extends State<MainScaffold> {
             NavItem(icon: Icons.chat_bubble_outline, label: "Messages"),
             NavItem(icon: Icons.person_outline, label: "Profile"),
           ],
-          screens: const [
-            FishermanDashboard(),
-            MyShopScreen(),
-            LogisticsScreen(),
-            FisherMessagesScreen(),
-            FisherProfileScreen(),
+          // REMOVED 'const' from this list
+          screens: [
+            const FishermanDashboard(),
+            const MyShopScreen(),
+            // FIXED: Passing AppTheme.vibrantBlue (Color) instead of '' (String)
+            const LiveTrackingMapScreen(trackingId: 'TRK-001', color: AppTheme.vibrantBlue),
+            const FisherMessagesScreen(),
+            const FisherProfileScreen(),
           ],
         );
+
 
       case UserRole.buyer:
         return _NavConfig(
