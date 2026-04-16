@@ -17,32 +17,42 @@ class _LiveTrackingMapScreenState extends State<LiveTrackingMapScreen> {
   MapboxMap? mapboxMap;
   PolylineAnnotationManager? polylineAnnotationManager;
   PointAnnotationManager? pointAnnotationManager;
+  final TextEditingController _searchController = TextEditingController();
 
-  // Mapbox uses Position(longitude, latitude)
+  // Nairobi Coordinates (Long, Lat)
+  final Position _nairobiCenter = Position(36.8219, -1.2921);
+
   final List<Position> _routePath = [
-    Position(-74.0060, 40.7128), // Start
-    Position(-74.0050, 40.7135),
-    Position(-74.0040, 40.7145),
-    Position(-74.0030, 40.7150), // End
+    Position(36.8219, -1.2921),
+    Position(36.8230, -1.2910),
+    Position(36.8250, -1.2890),
+    Position(36.8280, -1.2870),
   ];
 
   _onMapCreated(MapboxMap controller) async {
     mapboxMap = controller;
-
-    // 1. Initialize Managers
     polylineAnnotationManager = await controller.annotations.createPolylineAnnotationManager();
     pointAnnotationManager = await controller.annotations.createPointAnnotationManager();
 
-    // 2. Draw the Route & Marker
     _drawRoute();
     _addMarker();
+  }
+
+  // --- NEW SEARCH LOGIC ---
+  void _handleSearch(String value) {
+    if (value.toLowerCase() == "nairobi") {
+      mapboxMap?.flyTo(
+        CameraOptions(center: Point(coordinates: _nairobiCenter), zoom: 14.0),
+        MapAnimationOptions(duration: 2000),
+      );
+    }
+    // Note: To search real addresses, you will eventually integrate Mapbox Geocoding API
   }
 
   void _drawRoute() {
     polylineAnnotationManager?.create(
       PolylineAnnotationOptions(
         geometry: LineString(coordinates: _routePath),
-        // FIXED: Using toARGB32() to resolve deprecation
         lineColor: widget.color.toARGB32(),
         lineWidth: 5.0,
         lineOpacity: 0.8,
@@ -55,7 +65,6 @@ class _LiveTrackingMapScreenState extends State<LiveTrackingMapScreen> {
     pointAnnotationManager?.create(
       PointAnnotationOptions(
         geometry: Point(coordinates: _routePath.first),
-        // marker-15 is a standard Mapbox icon. "truck-icon" requires a custom upload.
         iconImage: "marker-15",
         iconSize: 2.0,
       ),
@@ -68,58 +77,34 @@ class _LiveTrackingMapScreenState extends State<LiveTrackingMapScreen> {
       value: SystemUiOverlayStyle.dark.copyWith(statusBarColor: Colors.transparent),
       child: Scaffold(
         extendBodyBehindAppBar: true,
-        appBar: AppBar(
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-          leading: Padding(
-            padding: const EdgeInsets.all(10),
-            child: CircleAvatar(
-              backgroundColor: Colors.white,
-              child: IconButton(
-                  icon: const Icon(Icons.close, color: Colors.black, size: 18),
-                  onPressed: () => Navigator.pop(context)
-              ),
-            ),
-          ),
-        ),
         body: Stack(
           children: [
-            // Ensure MapWidget takes full screen
             Positioned.fill(
               child: MapWidget(
                 key: const ValueKey("mapWidget"),
                 onMapCreated: _onMapCreated,
                 styleUri: MapboxStyles.MAPBOX_STREETS,
                 cameraOptions: CameraOptions(
-                  center: Point(coordinates: _routePath.first),
-                  zoom: 14.0,
+                  center: Point(coordinates: _nairobiCenter),
+                  zoom: 12.0,
                 ),
               ),
             ),
 
-            // Arriving Status Badge
+            // Floating Search Bar
             Positioned(
-              top: 110,
+              top: 60,
               left: 20,
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(20),
-                  boxShadow: const [BoxShadow(color: Colors.black12, blurRadius: 10)],
-                ),
-                child: Row(
-                  children: [
-                    Icon(Icons.timer_outlined, size: 18, color: widget.color),
-                    const SizedBox(width: 10),
-                    Text("Arriving in 12 min",
-                        style: GoogleFonts.urbanist(fontWeight: FontWeight.w800, fontSize: 14)),
-                  ],
-                ),
-              ),
+              right: 20,
+              child: _buildSearchBar(),
             ),
 
-            // Bottom Driver Details Card
+            Positioned(
+              top: 130,
+              left: 20,
+              child: _buildStatusBadge(),
+            ),
+
             Align(
               alignment: Alignment.bottomCenter,
               child: _buildDriverCard(),
@@ -130,9 +115,56 @@ class _LiveTrackingMapScreenState extends State<LiveTrackingMapScreen> {
     );
   }
 
+  Widget _buildSearchBar() {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 5),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.1), blurRadius: 15)],
+      ),
+      child: TextField(
+        controller: _searchController,
+        onSubmitted: _handleSearch, // Trigger search on enter
+        decoration: InputDecoration(
+          hintText: "Search Nairobi...",
+          prefixIcon: IconButton(
+            icon: const Icon(Icons.arrow_back_ios_new_rounded, size: 18),
+            onPressed: () => Navigator.pop(context),
+          ),
+          suffixIcon: IconButton(
+            icon: const Icon(Icons.search),
+            onPressed: () => _handleSearch(_searchController.text),
+          ),
+          border: InputBorder.none,
+          contentPadding: const EdgeInsets.symmetric(vertical: 15),
+        ),
+      ),
+    );
+  }
+
+  // Helper UI methods
+  Widget _buildStatusBadge() {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: const [BoxShadow(color: Colors.black12, blurRadius: 10)],
+      ),
+      child: Row(
+        children: [
+          Icon(Icons.timer_outlined, size: 18, color: widget.color),
+          const SizedBox(width: 10),
+          Text("Arriving in 12 min", style: GoogleFonts.urbanist(fontWeight: FontWeight.w800)),
+        ],
+      ),
+    );
+  }
+
   Widget _buildDriverCard() {
     return Container(
-      margin: const EdgeInsets.all(20),
+      margin: const EdgeInsets.all(50),
       padding: const EdgeInsets.all(25),
       decoration: BoxDecoration(
         color: Colors.white,
