@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
+import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart' as mbm;
+import 'package:mapbox_search/mapbox_search.dart' as mbs hide Color;
 import '../../../core/app_theme.dart';
 
 class LiveTrackingMapScreen extends StatefulWidget {
@@ -14,101 +15,96 @@ class LiveTrackingMapScreen extends StatefulWidget {
 }
 
 class _LiveTrackingMapScreenState extends State<LiveTrackingMapScreen> {
-  MapboxMap? mapboxMap;
-  PolylineAnnotationManager? polylineAnnotationManager;
-  PointAnnotationManager? pointAnnotationManager;
+  mbm.MapboxMap? mapboxMap;
   final TextEditingController _searchController = TextEditingController();
 
-  // Nairobi Coordinates (Long, Lat)
-  final Position _nairobiCenter = Position(36.8219, -1.2921);
+  late mbs.GeoCodingApi _geoCoding;
+  List<mbs.MapBoxPlace> _predictions = [];
 
-  final List<Position> _routePath = [
-    Position(36.8219, -1.2921),
-    Position(36.8230, -1.2910),
-    Position(36.8250, -1.2890),
-    Position(36.8280, -1.2870),
-  ];
+  final mbm.Position _nairobi = mbm.Position(36.8219, -1.2921);
 
-  _onMapCreated(MapboxMap controller) async {
-    mapboxMap = controller;
-    polylineAnnotationManager = await controller.annotations.createPolylineAnnotationManager();
-    pointAnnotationManager = await controller.annotations.createPointAnnotationManager();
-
-    _drawRoute();
-    _addMarker();
+  @override
+  void initState() {
+    super.initState();
+    _geoCoding = mbs.GeoCodingApi(
+      apiKey: "pk.eyJ1IjoiZWx2aW5kaW8iLCJhIjoiY21vMWpmcWpjMGZzeDJwcXdwOXp4N3ZrMiJ9.Mc5Blk8BDRdFHWBLkc25Aw",
+      limit: 5,
+      country: "KE",
+    );
   }
 
-  // --- NEW SEARCH LOGIC ---
-  void _handleSearch(String value) {
-    if (value.toLowerCase() == "nairobi") {
-      mapboxMap?.flyTo(
-        CameraOptions(center: Point(coordinates: _nairobiCenter), zoom: 14.0),
-        MapAnimationOptions(duration: 2000),
-      );
+  void _onSearchChanged(String query) async {
+    if (query.isEmpty) {
+      setState(() => _predictions = []);
+      return;
     }
-    // Note: To search real addresses, you will eventually integrate Mapbox Geocoding API
+
+    try {
+      final List<mbs.MapBoxPlace>? response = await _geoCoding.getPlaces(query);
+      setState(() {
+        _predictions = response ?? [];
+      });
+    } catch (e) {
+      setState(() => _predictions = []);
+    }
   }
 
-  void _drawRoute() {
-    polylineAnnotationManager?.create(
-      PolylineAnnotationOptions(
-        geometry: LineString(coordinates: _routePath),
-        lineColor: widget.color.toARGB32(),
-        lineWidth: 5.0,
-        lineOpacity: 0.8,
-        lineJoin: LineJoin.ROUND,
-      ),
-    );
-  }
+  void _moveToLocation(mbs.MapBoxPlace place) {
+    final center = place.center;
 
-  void _addMarker() {
-    pointAnnotationManager?.create(
-      PointAnnotationOptions(
-        geometry: Point(coordinates: _routePath.first),
-        iconImage: "marker-15",
-        iconSize: 2.0,
-      ),
-    );
+    if (center != null) {
+      mapboxMap?.flyTo(
+        mbm.CameraOptions(
+          center: mbm.Point(coordinates: mbm.Position(center.long, center.lat)),
+          zoom: 15.0,
+        ),
+        mbm.MapAnimationOptions(duration: 2000),
+      );
+
+      setState(() {
+        _predictions = [];
+        _searchController.text = place.text ?? "";
+      });
+      FocusScope.of(context).unfocus();
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: SystemUiOverlayStyle.dark.copyWith(statusBarColor: Colors.transparent),
+      value: SystemUiOverlayStyle.dark,
       child: Scaffold(
-        extendBodyBehindAppBar: true,
+        resizeToAvoidBottomInset: false,
         body: Stack(
           children: [
             Positioned.fill(
-              child: MapWidget(
+              child: mbm.MapWidget(
                 key: const ValueKey("mapWidget"),
-                onMapCreated: _onMapCreated,
-                styleUri: MapboxStyles.MAPBOX_STREETS,
-                cameraOptions: CameraOptions(
-                  center: Point(coordinates: _nairobiCenter),
-                  zoom: 12.0,
-                ),
+                onMapCreated: (controller) => mapboxMap = controller,
+                cameraOptions: mbm.CameraOptions(center: mbm.Point(coordinates: _nairobi), zoom: 12.0),
+                styleUri: mbm.MapboxStyles.MAPBOX_STREETS,
               ),
             ),
-
-            // Floating Search Bar
             Positioned(
               top: 60,
               left: 20,
               right: 20,
-              child: _buildSearchBar(),
+              child: Column(
+                children: [
+                  _buildSearchBar(),
+                  if (_predictions.isNotEmpty) _buildSuggestionsList(),
+                ],
+              ),
             ),
-
             Positioned(
               top: 130,
               left: 20,
               child: _buildStatusBadge(),
             ),
-
             Align(
               alignment: Alignment.bottomCenter,
               child: _buildDriverCard(),
-            )
+            ),
           ],
         ),
       ),
@@ -117,25 +113,24 @@ class _LiveTrackingMapScreenState extends State<LiveTrackingMapScreen> {
 
   Widget _buildSearchBar() {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 5),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(20),
-        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.1), blurRadius: 15)],
+        boxShadow: const [BoxShadow(color: Colors.black12, blurRadius: 15)],
       ),
       child: TextField(
         controller: _searchController,
-        onSubmitted: _handleSearch, // Trigger search on enter
+        onChanged: _onSearchChanged,
+        style: GoogleFonts.urbanist(fontWeight: FontWeight.w600),
         decoration: InputDecoration(
-          hintText: "Search Nairobi...",
-          prefixIcon: IconButton(
-            icon: const Icon(Icons.arrow_back_ios_new_rounded, size: 18),
-            onPressed: () => Navigator.pop(context),
-          ),
-          suffixIcon: IconButton(
-            icon: const Icon(Icons.search),
-            onPressed: () => _handleSearch(_searchController.text),
-          ),
+          hintText: "Search Nairobi places...",
+          prefixIcon: const Icon(Icons.search, color: Colors.black54),
+          suffixIcon: _searchController.text.isNotEmpty
+              ? IconButton(icon: const Icon(Icons.close), onPressed: () {
+            _searchController.clear();
+            setState(() => _predictions = []);
+          })
+              : null,
           border: InputBorder.none,
           contentPadding: const EdgeInsets.symmetric(vertical: 15),
         ),
@@ -143,7 +138,33 @@ class _LiveTrackingMapScreenState extends State<LiveTrackingMapScreen> {
     );
   }
 
-  // Helper UI methods
+  Widget _buildSuggestionsList() {
+    return Container(
+      margin: const EdgeInsets.only(top: 5),
+      constraints: const BoxConstraints(maxHeight: 250),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: const [BoxShadow(color: Colors.black12, blurRadius: 10)],
+      ),
+      child: ListView.separated(
+        shrinkWrap: true,
+        padding: EdgeInsets.zero,
+        itemCount: _predictions.length,
+        separatorBuilder: (context, index) => const Divider(height: 1),
+        itemBuilder: (context, index) {
+          final place = _predictions[index];
+          return ListTile(
+            leading: const Icon(Icons.location_on_outlined, color: Colors.grey),
+            title: Text(place.text ?? "", style: GoogleFonts.urbanist(fontWeight: FontWeight.w700)),
+            subtitle: Text(place.placeName ?? "", maxLines: 1, overflow: TextOverflow.ellipsis, style: GoogleFonts.urbanist(fontSize: 12)),
+            onTap: () => _moveToLocation(place),
+          );
+        },
+      ),
+    );
+  }
+
   Widget _buildStatusBadge() {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -153,10 +174,11 @@ class _LiveTrackingMapScreenState extends State<LiveTrackingMapScreen> {
         boxShadow: const [BoxShadow(color: Colors.black12, blurRadius: 10)],
       ),
       child: Row(
+        mainAxisSize: MainAxisSize.min,
         children: [
           Icon(Icons.timer_outlined, size: 18, color: widget.color),
           const SizedBox(width: 10),
-          Text("Arriving in 12 min", style: GoogleFonts.urbanist(fontWeight: FontWeight.w800)),
+          Text("Arriving in 12 min", style: GoogleFonts.urbanist(fontWeight: FontWeight.w800, fontSize: 14)),
         ],
       ),
     );
@@ -164,14 +186,14 @@ class _LiveTrackingMapScreenState extends State<LiveTrackingMapScreen> {
 
   Widget _buildDriverCard() {
     return Container(
-      margin: const EdgeInsets.all(50),
+      margin: const EdgeInsets.fromLTRB(20, 0, 20, 30),
       padding: const EdgeInsets.all(25),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(35),
         boxShadow: [
           BoxShadow(
-              color: Colors.black.withValues(alpha: 0.1), // Modern withValues syntax
+              color: Colors.black.withValues(alpha: 0.1),
               blurRadius: 25,
               offset: const Offset(0, -5)
           )
@@ -192,8 +214,7 @@ class _LiveTrackingMapScreenState extends State<LiveTrackingMapScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text("Marco Rossi", style: GoogleFonts.urbanist(fontWeight: FontWeight.w900, fontSize: 18)),
-                    Text("Truck ID: TK-204 • 4.9 ★",
-                        style: GoogleFonts.urbanist(color: Colors.grey, fontSize: 13, fontWeight: FontWeight.w600)),
+                    Text("Truck ID: TK-204 • 4.9 ★", style: GoogleFonts.urbanist(color: Colors.grey, fontSize: 13, fontWeight: FontWeight.w600)),
                   ],
                 ),
               ),
@@ -223,8 +244,7 @@ class _LiveTrackingMapScreenState extends State<LiveTrackingMapScreen> {
                   padding: const EdgeInsets.symmetric(vertical: 20),
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20))
               ),
-              child: Text("Contact Driver",
-                  style: GoogleFonts.urbanist(color: Colors.white, fontWeight: FontWeight.w900, fontSize: 16)),
+              child: Text("Contact Driver", style: GoogleFonts.urbanist(color: Colors.white, fontWeight: FontWeight.w900, fontSize: 16)),
             ),
           )
         ],
