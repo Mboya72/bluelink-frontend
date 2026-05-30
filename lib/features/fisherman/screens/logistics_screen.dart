@@ -16,12 +16,21 @@ class LiveTrackingMapScreen extends StatefulWidget {
 
 class _LiveTrackingMapScreenState extends State<LiveTrackingMapScreen> {
   mbm.MapboxMap? mapboxMap;
-  final TextEditingController _searchController = TextEditingController();
+  mbm.PointAnnotationManager? pointAnnotationManager;
+  mbm.PolylineAnnotationManager? polylineAnnotationManager;
 
+  final TextEditingController _searchController = TextEditingController();
   late mbs.GeoCodingApi _geoCoding;
   List<mbs.MapBoxPlace> _predictions = [];
 
   final mbm.Position _nairobi = mbm.Position(36.8219, -1.2921);
+
+  // Mock Route for the "Trailing" effect
+  final List<mbm.Position> _truckRoute = [
+    mbm.Position(36.8219, -1.2921),
+    mbm.Position(36.8235, -1.2935),
+    mbm.Position(36.8250, -1.2950),
+  ];
 
   @override
   void initState() {
@@ -33,25 +42,26 @@ class _LiveTrackingMapScreenState extends State<LiveTrackingMapScreen> {
     );
   }
 
+  // --- SEARCH LOGIC ---
   void _onSearchChanged(String query) async {
     if (query.isEmpty) {
       setState(() => _predictions = []);
       return;
     }
 
-    try {
-      final List<mbs.MapBoxPlace>? response = await _geoCoding.getPlaces(query);
-      setState(() {
-        _predictions = response ?? [];
-      });
-    } catch (e) {
-      setState(() => _predictions = []);
-    }
+    final response = await _geoCoding.getPlaces(query);
+    setState(() {
+      final success = response.success;
+      if (success is List<mbs.MapBoxPlace>) {
+        _predictions = success;
+      } else {
+        _predictions = [];
+      }
+    });
   }
 
   void _moveToLocation(mbs.MapBoxPlace place) {
     final center = place.center;
-
     if (center != null) {
       mapboxMap?.flyTo(
         mbm.CameraOptions(
@@ -69,6 +79,43 @@ class _LiveTrackingMapScreenState extends State<LiveTrackingMapScreen> {
     }
   }
 
+  // --- MAP VISUALS ---
+  void _onMapCreated(mbm.MapboxMap controller) async {
+    mapboxMap = controller;
+    pointAnnotationManager = await controller.annotations.createPointAnnotationManager();
+    polylineAnnotationManager = await controller.annotations.createPolylineAnnotationManager();
+    _setupLiveVisuals();
+  }
+
+  void _setupLiveVisuals() async {
+    // 1. Draw the "Road Trail"
+    polylineAnnotationManager?.create(
+      mbm.PolylineAnnotationOptions(
+        geometry: mbm.LineString(coordinates: _truckRoute),
+        lineColor: Colors.black.toARGB32(), // Fixed deprecation
+        lineWidth: 4.0,
+        lineOpacity: 0.8,
+      ),
+    );
+
+    // 2. Add the Realistic Truck Marker
+    try {
+      final ByteData bytes = await rootBundle.load('assets/images/truck_top_view.png');
+      final Uint8List list = bytes.buffer.asUint8List();
+
+      pointAnnotationManager?.create(
+        mbm.PointAnnotationOptions(
+          geometry: mbm.Point(coordinates: _truckRoute.last),
+          image: list,
+          iconSize: 0.5,
+          iconRotate: 45.0,
+        ),
+      );
+    } catch (e) {
+      debugPrint("Error loading truck asset: $e");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return AnnotatedRegion<SystemUiOverlayStyle>(
@@ -80,8 +127,12 @@ class _LiveTrackingMapScreenState extends State<LiveTrackingMapScreen> {
             Positioned.fill(
               child: mbm.MapWidget(
                 key: const ValueKey("mapWidget"),
-                onMapCreated: (controller) => mapboxMap = controller,
-                cameraOptions: mbm.CameraOptions(center: mbm.Point(coordinates: _nairobi), zoom: 12.0),
+                onMapCreated: _onMapCreated,
+                cameraOptions: mbm.CameraOptions(
+                  center: mbm.Point(coordinates: _nairobi),
+                  zoom: 14.0,
+                  pitch: 45.0,
+                ),
                 styleUri: mbm.MapboxStyles.MAPBOX_STREETS,
               ),
             ),
@@ -111,6 +162,7 @@ class _LiveTrackingMapScreenState extends State<LiveTrackingMapScreen> {
     );
   }
 
+  // --- UI WIDGETS ---
   Widget _buildSearchBar() {
     return Container(
       decoration: BoxDecoration(
@@ -126,10 +178,12 @@ class _LiveTrackingMapScreenState extends State<LiveTrackingMapScreen> {
           hintText: "Search Nairobi places...",
           prefixIcon: const Icon(Icons.search, color: Colors.black54),
           suffixIcon: _searchController.text.isNotEmpty
-              ? IconButton(icon: const Icon(Icons.close), onPressed: () {
-            _searchController.clear();
-            setState(() => _predictions = []);
-          })
+              ? IconButton(
+              icon: const Icon(Icons.close),
+              onPressed: () {
+                _searchController.clear();
+                setState(() => _predictions = []);
+              })
               : null,
           border: InputBorder.none,
           contentPadding: const EdgeInsets.symmetric(vertical: 15),
